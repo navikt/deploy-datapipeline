@@ -6,7 +6,7 @@ metadata:
   labels:
     "team": "nais-analyse"
 spec:
-  image: {{image}}
+  image: {{IMAGE}}
   liveness:
     path: "/isalive"
     port: 8080
@@ -18,11 +18,11 @@ spec:
     initialDelay: 20
     timeout: 60
   replicas:
-    min: 2
-    max: 2
+    min: 1
+    max: 1
     cpuThresholdPercentage: 50
   prometheus:
-    enabled: true
+    enabled: false
     path: "/metrics"
   limits:
     cpu: "200m"
