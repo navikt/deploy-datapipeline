@@ -1,0 +1,49 @@
+name: "Build and deploy deploy-datapipeline"
+on:
+  push:
+    branches:
+      - "main"
+env:
+  "IMAGE": "docker.pkg.github.com/${{ github.repository }}/deploy-datapipeline:${{\
+    \ github.sha }}"
+jobs:
+  build:
+    name: "build"
+    runs-on: "ubuntu-latest"
+    steps:
+      - uses: "actions/checkout@v2"
+      - name: Set up Python 3.9
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install poetry
+          poetry install
+      - name: Test with pytest
+        run: poetry run pytest
+      - name: Generate image environment variable
+        run: |
+          version=$(./version.sh)
+          echo "version=${version}" >> $GITHUB_ENV
+          echo "IMAGE=${image}:${version}" >> $GITHUB_ENV
+      - name: Build and push docker image
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          docker login docker.pkg.github.com -u ${GITHUB_REPOSITORY} -p ${GITHUB_TOKEN}
+          docker build . --tag $IMAGE
+          docker push $IMAGE
+
+  deployToProd:
+      name: "Deploy to prod"
+      runs-on: "ubuntu-latest"
+      steps:
+        - uses: "actions/checkout@v2"
+        - name: "Deploy to prod-gcp"
+          uses: "nais/deploy/actions/deploy@v1"
+          env:
+            "APIKEY": "${{ secrets.NAIS_DEPLOY_APIKEY }}"
+            "CLUSTER": "prod-gcp"
+            "RESOURCE": "nais.yaml"
