@@ -41,10 +41,15 @@ jobs:
     runs-on: "ubuntu-latest"
     steps:
       - uses: "actions/checkout@v2"
+      - name: Generate image environment variable
+        run: |
+          version=$(./version.sh)
+          echo "version=${version}" >> $GITHUB_ENV
+          echo "IMAGE=${image}:${version}" >> $GITHUB_ENV
       - name: "Deploy to prod-gcp"
         uses: "nais/deploy/actions/deploy@v1"
         env:
           "APIKEY": "${{ secrets.NAIS_DEPLOY_APIKEY }}"
           "CLUSTER": "prod-gcp"
           "RESOURCE": "nais.yaml"
-          "image": ${IMAGE}
+          "IMAGE": $IMAGE

@@ -6,7 +6,7 @@ metadata:
   labels:
     "team": "nais-analyse"
 spec:
-  image: {{image}}
+  image: {{IMAGE}}
   liveness:
     path: "/isalive"
     port: 8080
