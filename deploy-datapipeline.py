@@ -1,6 +1,7 @@
 from flask import Flask
 from influxdb import InfluxDBClient, DataFrameClient
 import pandas as pd
+import threading
 
 app = Flask(__name__)
 
@@ -31,5 +32,6 @@ def getdeploydatafrominflux():
 
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=8080)
+    threading.Thread(app.run(host='0.0.0.0', port=8080)).start()
+    print("test")
     getdeploydatafrominflux()
