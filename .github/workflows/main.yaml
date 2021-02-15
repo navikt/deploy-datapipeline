@@ -4,7 +4,7 @@ on:
     branches:
       - "main"
 env:
-  "IMAGE": docker.pkg.github.com/${{ github.repository }}/deploy-datapipeline
+  "image": docker.pkg.github.com/${{ github.repository }}/deploy-datapipeline
 
 jobs:
   build:
@@ -28,7 +28,7 @@ jobs:
         run: |
           version=$(./version.sh)
           echo "version=${version}" >> $GITHUB_ENV
-          echo "IMAGE=${IMAGE}:${version}" >> $GITHUB_ENV
+          echo "IMAGE=${image}:${version}" >> $GITHUB_ENV
       - name: Build and push docker image
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -45,11 +45,11 @@ jobs:
         run: |
           version=$(./version.sh)
           echo "version=${version}" >> $GITHUB_ENV
-          echo "IMAGE=${IMAGE}:${version}" >> $GITHUB_ENV
+          echo "IMAGE=${image}:${version}" >> $GITHUB_ENV
       - name: "Deploy to prod-gcp"
         uses: "nais/deploy/actions/deploy@v1"
         env:
           "APIKEY": "${{ secrets.NAIS_DEPLOY_APIKEY }}"
           "CLUSTER": "prod-gcp"
           "RESOURCE": "nais.yaml"
-          "IMAGE": "${IMAGE}"
+          VAR: image=${{ IMAGE }}
