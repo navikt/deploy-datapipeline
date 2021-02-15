@@ -2,11 +2,11 @@ from flask import Flask
 
 app = Flask(__name__)
 
-@app.route('/isReady')
+@app.route('/isready')
 def isReady():
     return "OK"
 
-@app.route('/isAlive')
+@app.route('/isalive')
 def isAlive():
     return "OK"
 
