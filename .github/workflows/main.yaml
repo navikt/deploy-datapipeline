@@ -28,7 +28,7 @@ jobs:
         run: |
           version=$(./version.sh)
           echo "version=${version}" >> $GITHUB_ENV
-          echo "IMAGE=${image}:${version}" >> $GITHUB_ENV
+          echo "IMAGE=${IMAGE}:${version}" >> $GITHUB_ENV
       - name: Build and push docker image
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
