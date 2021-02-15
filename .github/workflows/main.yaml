@@ -45,11 +45,11 @@ jobs:
         run: |
           version=$(./version.sh)
           echo "version=${version}" >> $GITHUB_ENV
-          echo "IMAGE=${image}:${version}" >> $GITHUB_ENV
+          echo "IMAGE=${IMAGE}:${version}" >> $GITHUB_ENV
       - name: "Deploy to prod-gcp"
         uses: "nais/deploy/actions/deploy@v1"
         env:
           "APIKEY": "${{ secrets.NAIS_DEPLOY_APIKEY }}"
           "CLUSTER": "prod-gcp"
           "RESOURCE": "nais.yaml"
-          "IMAGE": $IMAGE
+          "IMAGE": "${IMAGE}"
