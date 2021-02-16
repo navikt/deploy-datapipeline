@@ -3,6 +3,7 @@ from influxdb import InfluxDBClient, DataFrameClient
 import pandas as pd
 import threading
 import atexit
+import requests
 
 POOL_TIME = 5 #Seconds
 
@@ -16,31 +17,22 @@ def createApp():
         global yourThread
         yourThread.cancel()
 
-    def getdeploydatafrominflux():
+    def getdeploydatafromvera():
         print("starting thread")
         global yourThread
 
-        client = DataFrameClient('influxdb.adeo.no', 8086, 'tmp123', 'tmp123', 'metrics')
-        query = """    
-            SELECT * 
-            FROM "nais.deployment" 
-            WHERE ("team" =~ /.+/ 
-            AND "team" != 'aura'
-            AND "rollout_status" = 'complete' 
-            AND "environment" = "production")
-        """
-        result = client.query(query)
-        df = pd.concat(result).reset_index()
-        print(df.head())
+        response = requests.get("https://vera.adeo.no/api/v1/deploylog?environment=p&csv=true&last=1d")
+
+        print(response.headers)
         # Set the next thread to happen
-        # yourThread = threading.Timer(POOL_TIME, getdeploydatafrominflux(), ())
+        # yourThread = threading.Timer(POOL_TIME, getdeploydatafromvera(), ())
         # yourThread.start()
 
     def doStuffStart():
         # Do initialisation stuff here
         global yourThread
         # Create your thread
-        yourThread = threading.Timer(POOL_TIME, getdeploydatafrominflux, ())
+        yourThread = threading.Timer(POOL_TIME, getdeploydatafromvera, ())
         yourThread.start()
 
     # Initiate
