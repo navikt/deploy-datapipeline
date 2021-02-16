@@ -21,7 +21,7 @@ def createApp():
         print("starting thread")
         global yourThread
 
-        response = requests.get("https://vera.adeo.no/api/v1/deploylog?environment=p&csv=true&last=1d")
+        response = requests.get("https://vera.nais.oera.no/api/v1/deploylog?environment=p&csv=true&last=1d")
 
         print(response.headers)
         # Set the next thread to happen

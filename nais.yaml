@@ -30,3 +30,7 @@ spec:
   requests:
     cpu: "200m"
     memory: "256Mi"
+  accessPolicy:
+    outbound:
+      external:
+        - host: vera.nais.oera.no
