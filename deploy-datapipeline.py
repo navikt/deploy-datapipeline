@@ -11,6 +11,12 @@ POOL_TIME = 5  # Seconds
 # thread handler
 yourThread = threading.Thread()
 logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
+ch = logging.StreamHandler()
+ch.setLevel(logging.DEBUG)
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+ch.setFormatter(formatter)
+logger.addHandler(ch)
 
 
 def createApp():
@@ -63,5 +69,6 @@ def isAlive():
 
 
 if __name__ == "__main__":
+    print("test")
     logger.info("starting service")
     app.run(host='0.0.0.0', port=8080)
