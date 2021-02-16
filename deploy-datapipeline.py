@@ -63,5 +63,5 @@ def isAlive():
 
 
 if __name__ == "__main__":
-    print("starting service")
+    logger.info("starting service")
     app.run(host='0.0.0.0', port=8080)
