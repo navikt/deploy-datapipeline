@@ -4,26 +4,31 @@ import pandas as pd
 import threading
 import atexit
 import requests
+import logging
 
-POOL_TIME = 5 #Seconds
+POOL_TIME = 5  # Seconds
 
 # thread handler
 yourThread = threading.Thread()
+logger = logging.getLogger(__name__)
+
 
 def createApp():
     app = Flask(__name__)
+
+    logger.info("create app")
 
     def interrupt():
         global yourThread
         yourThread.cancel()
 
     def getdeploydatafromvera():
-        print("starting thread")
         global yourThread
+        logger.info("get data from vera")
 
         response = requests.get("https://vera.nais.oera.no/api/v1/deploylog?environment=p&csv=true&last=1d")
-
-        print(response.headers)
+        logger.info("status:", response.status_code)
+        logger.info(response.headers)
         # Set the next thread to happen
         # yourThread = threading.Timer(POOL_TIME, getdeploydatafromvera(), ())
         # yourThread.start()
@@ -31,6 +36,8 @@ def createApp():
     def doStuffStart():
         # Do initialisation stuff here
         global yourThread
+        logger.info("do stuff start")
+
         # Create your thread
         yourThread = threading.Timer(POOL_TIME, getdeploydatafromvera, ())
         yourThread.start()
@@ -40,6 +47,7 @@ def createApp():
     # When you kill Flask (SIGTERM), clear the trigger for the next thread
     atexit.register(interrupt)
     return app
+
 
 app = createApp()
 
@@ -52,6 +60,7 @@ def isReady():
 @app.route('/isalive')
 def isAlive():
     return "OK"
+
 
 if __name__ == "__main__":
     print("starting service")
