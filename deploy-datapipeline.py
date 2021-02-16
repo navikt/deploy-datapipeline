@@ -62,5 +62,5 @@ def isAlive():
     return "OK"
 
 if __name__ == "__main__":
-    threading.Thread(app.run(host='0.0.0.0', port=8080)).start()
-    print("started service")
+    print("starting service")
+    app.run(host='0.0.0.0', port=8080)
