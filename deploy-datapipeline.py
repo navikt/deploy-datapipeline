@@ -33,7 +33,6 @@ def createApp():
         logger.info("get data from vera")
 
         response = requests.get("https://vera.nais.oera.no/api/v1/deploylog?environment=p&csv=true&last=1d")
-        logger.info("status:", response.status_code)
         logger.info(response.headers)
         # Set the next thread to happen
         # yourThread = threading.Timer(POOL_TIME, getdeploydatafromvera(), ())
