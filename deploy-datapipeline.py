@@ -36,7 +36,7 @@ class veradata():
 
     def writecodetobucket(self, bytes):
         client = storage.Client()
-        bucket = client.get_bucket("deplioyments-vera")
+        bucket = client.get_bucket("deployments-vera")
         today = datetime.date.today()
         date = today.strftime("%b-%d-%Y")
         blob = bucket.blob(date+"deploys-vera.csv")
