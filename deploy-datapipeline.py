@@ -7,6 +7,8 @@ import atexit
 import requests
 import logging
 from google.cloud import storage
+from datetime import date
+
 
 POOL_TIME = 5  # Seconds
 
@@ -27,7 +29,7 @@ class veradata():
         logger.info("get data from vera")
         start = time.time()
         response = requests.get("https://vera.nais.oera.no/api/v1/deploylog?environment=p&csv=true")
-        #response = requests.get("https://vera.adeo.no/api/v1/deploylog?environment=p&csv=true")
+        # response = requests.get("https://vera.adeo.no/api/v1/deploylog?environment=p&csv=true")
         end = time.time()
         logger.info("vera.time " + str(end - start) + " seconds. ")
         logger.info("vera.size " + str(len(response.content)) + " bytes. ")
@@ -36,7 +38,9 @@ class veradata():
     def writecodetobucket(self, bytes):
         client = storage.Client()
         bucket = client.get_bucket("deplioyments.vera")
-        blob = bucket.blob("name of blob")
+        today = date.today()
+        date = today.strftime("%b-%d-%Y")
+        blob = bucket.blob(date+"deploys-vera.csv")
         blob.upload_from_string(str(bytes))
 
 
