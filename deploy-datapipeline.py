@@ -1,10 +1,12 @@
 from flask import Flask
 from influxdb import InfluxDBClient, DataFrameClient
 import pandas as pd
+import time
 import threading
 import atexit
 import requests
 import logging
+from google.cloud import storage
 
 POOL_TIME = 5  # Seconds
 
@@ -19,8 +21,28 @@ ch.setFormatter(formatter)
 logger.addHandler(ch)
 
 
+class veradata():
+
+    def getdeploydatafromvera(self):
+        logger.info("get data from vera")
+        start = time.time()
+        # response = requests.get("https://vera.nais.oera.no/api/v1/deploylog?environment=p&csv=true")
+        response = requests.get("https://vera.adeo.no/api/v1/deploylog?environment=p&csv=true")
+        end = time.time()
+        logger.info("vera.time " + str(end - start) + " seconds. ")
+        logger.info("vera.size " + str(len(response.content)) + " bytes. ")
+        return response.content
+
+    def writecodetobucket(self, bytes):
+        client = storage.Client()
+        bucket = client.get_bucket("deplioyments.vera")
+        blob = bucket.blob("name of blob")
+        blob.upload_from_string(str(bytes))
+
+
 def createApp():
     app = Flask(__name__)
+    vera = veradata()
 
     logger.info("create app")
 
@@ -30,10 +52,8 @@ def createApp():
 
     def getdeploydatafromvera():
         global yourThread
-        logger.info("get data from vera")
-
-        response = requests.get("https://vera.nais.oera.no/api/v1/deploylog?environment=p&csv=true&last=1d")
-        logger.info(response.headers)
+        bytes = vera.getdeploydatafromvera()
+        vera.writecodetobucket(bytes)
         # Set the next thread to happen
         # yourThread = threading.Timer(POOL_TIME, getdeploydatafromvera(), ())
         # yourThread.start()

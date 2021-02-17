@@ -34,3 +34,6 @@ spec:
     outbound:
       external:
         - host: vera.nais.oera.no
+  gcp:
+    buckets:
+      - name: deployments-vera
