@@ -26,8 +26,8 @@ class veradata():
     def getdeploydatafromvera(self):
         logger.info("get data from vera")
         start = time.time()
-        # response = requests.get("https://vera.nais.oera.no/api/v1/deploylog?environment=p&csv=true")
-        response = requests.get("https://vera.adeo.no/api/v1/deploylog?environment=p&csv=true")
+        response = requests.get("https://vera.nais.oera.no/api/v1/deploylog?environment=p&csv=true")
+        #response = requests.get("https://vera.adeo.no/api/v1/deploylog?environment=p&csv=true")
         end = time.time()
         logger.info("vera.time " + str(end - start) + " seconds. ")
         logger.info("vera.size " + str(len(response.content)) + " bytes. ")
