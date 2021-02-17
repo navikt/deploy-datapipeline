@@ -7,8 +7,7 @@ import atexit
 import requests
 import logging
 from google.cloud import storage
-from datetime import date
-
+import datetime
 
 POOL_TIME = 5  # Seconds
 
@@ -37,8 +36,8 @@ class veradata():
 
     def writecodetobucket(self, bytes):
         client = storage.Client()
-        bucket = client.get_bucket("deplioyments.vera")
-        today = date.today()
+        bucket = client.get_bucket("deplioyments-vera")
+        today = datetime.date.today()
         date = today.strftime("%b-%d-%Y")
         blob = bucket.blob(date+"deploys-vera.csv")
         blob.upload_from_string(str(bytes))
