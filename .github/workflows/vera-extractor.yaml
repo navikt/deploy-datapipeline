@@ -1,10 +1,12 @@
-name: "Build and deploy deploy-datapipeline"
+name: "Build and deploy vera extractor"
 on:
   push:
     branches:
       - "main"
+    paths:
+      - "vera-extractor/**"
 env:
-  "IMAGE": docker.pkg.github.com/${{ github.repository }}/deploy-datapipeline:${{ github.sha }}
+  "IMAGE": docker.pkg.github.com/${{ github.repository }}/vera-extractor:${{ github.sha }}
 
 jobs:
   build:

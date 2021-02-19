@@ -1,12 +1,10 @@
 from flask import Flask
-from influxdb import InfluxDBClient, DataFrameClient
-import pandas as pd
 import time
 import threading
 import atexit
 import requests
 import logging
-from google.cloud import storage, bigquery
+from google.cloud import storage
 import datetime
 
 POOL_TIME = 5  # Seconds
@@ -39,37 +37,9 @@ class veradata():
         bucket = client.get_bucket("deployments-vera")
         today = datetime.date.today()
         date = today.strftime("%b-%d-%Y")
-        blob = bucket.blob(date+"deploys-vera.csv")
+        blob_name = date + "deploys-vera.csv"
+        blob = bucket.blob(blob_name)
         blob.upload_from_string(str(bytes))
-
-
-class bq_write():
-
-    def write_vera_history_to_bq(self, csv_file):
-        client = bigquery.Client()
-        job_config = bigquery.LoadJobConfig(
-            schema=[
-                bigquery.SchemaField("environment", "STRING"),
-                bigquery.SchemaField("application", "STRING"),
-                bigquery.SchemaField("version", "STRING"),
-                bigquery.SchemaField("deployer", "STRING"),
-                bigquery.SchemaField("deployed_timestamp", "TIMESTAMP"),
-                bigquery.SchemaField("replaced_timestamp", "TIMESTAMP"),
-                bigquery.SchemaField("environmentClass", "STRING"),
-                bigquery.SchemaField("id", "STRING")
-            ],
-            skip_leading_rows=1,
-            source_format=bigquery.SourceFormat.CSV
-        )
-        source_uri = "gs://nais-analyse-prod/bigquery/deploys/deploys.csv"
-        table_id = "nais-analyse-prod-2dcc.deploys"
-        load_job = client.load_table_from_uri(source_uri, table_id, job_config=job_config)
-        load_job.result()
-
-        destination_table = client.get_table(table_id)  # Make an API request.
-        print("Loaded {} rows.".format(destination_table.num_rows))
-
-
 
 def createApp():
     app = Flask(__name__)
@@ -84,7 +54,9 @@ def createApp():
     def getdeploydatafromvera():
         global yourThread
         bytes = vera.getdeploydatafromvera()
-        vera.writecodetobucket(bytes)
+        blobname = vera.writecodetobucket(bytes)
+        vera.write_vera_history_to_bq(blobname)
+
         # Set the next thread to happen
         # yourThread = threading.Timer(POOL_TIME, getdeploydatafromvera(), ())
         # yourThread.start()
