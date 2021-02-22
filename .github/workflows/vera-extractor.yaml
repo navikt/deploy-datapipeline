@@ -44,4 +44,4 @@ jobs:
         env:
           "APIKEY": "${{ secrets.NAIS_DEPLOY_APIKEY }}"
           "CLUSTER": "prod-gcp"
-          "RESOURCE": "nais.yaml"
+          "RESOURCE": "vera-extractor/nais.yaml"
