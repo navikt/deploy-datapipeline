@@ -5,6 +5,7 @@ on:
       - "main"
     paths:
       - "vera-extractor/**"
+      - ".github/workflows/vera-extractor.yaml
 env:
   "IMAGE": docker.pkg.github.com/${{ github.repository }}/vera-extractor:${{ github.sha }}
 
