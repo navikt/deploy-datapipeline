@@ -27,7 +27,7 @@ jobs:
         run: |
           pytest
       - name: Build and push docker image
-        run: "docker build --pull --tag ${IMAGE} . && echo $GITHUB_TOKEN | docker login\
+        run: "docker build --pull --tag ${IMAGE} ./vera-extractor && echo $GITHUB_TOKEN | docker login\
                 \ --username $GITHUB_REPOSITORY --password-stdin https://docker.pkg.github.com\
                 \ && docker push ${IMAGE}"
         env:
