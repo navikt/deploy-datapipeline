@@ -21,3 +21,52 @@ resource "google_project_service" "service" {
   service                    = each.key
   disable_dependent_services = false
 }
+
+resource "google_bigquery_dataset" "default" {
+  dataset_id                  = "deploys"
+  friendly_name               = "deploys"
+  description                 = "Data about nais deploys"
+}
+
+resource "google_bigquery_table" "vera_deploys" {
+  dataset_id = google_bigquery_dataset.default.dataset_id
+  table_id   = "vera_deploys"
+
+  schema = <<EOF
+[
+  {
+    "name": "environment",
+    "type": "STRING",
+  },
+  {
+    "name": "application",
+    "type": "STRING",
+  },
+  {
+    "name": "version",
+    "type": "STRING",
+  },
+  {
+    "name": "deployer",
+    "type": "STRING",
+  },
+  {
+    "name": "deployed_timestamp",
+    "type": "TIMESTAMP",
+  },
+  {
+    "name": "replaced_timestamp",
+    "type": "TIMESTAMP",
+  },
+  {
+    "name": "environmentClass",
+    "type": "STRING",
+  },
+  {
+    "name": "id",
+    "type": "STRING",
+  }
+]
+EOF
+
+}
