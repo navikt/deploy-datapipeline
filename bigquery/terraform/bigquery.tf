@@ -18,6 +18,6 @@ resource "google_project_service" "service" {
     "cloudfunctions.googleapis.com",
     "compute.googleapis.com"
   ])
-  service                    = each.key 
+  service                    = each.key
   disable_dependent_services = false
 }

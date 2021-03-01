@@ -34,7 +34,7 @@ jobs:
 
       - name: Terraform Apply
         id: apply
-        run: terraform apply -no-color -auto-approve
+        run: terraform apply -no-color -auto-approve -lock=false
         working-directory: bigquery/terraform
         continue-on-error: true
 
