@@ -26,6 +26,7 @@ resource "google_bigquery_dataset" "default" {
   dataset_id                  = "deploys"
   friendly_name               = "deploys"
   description                 = "Data about nais deploys"
+  location                    = "europe-north1"
 }
 
 resource "google_bigquery_table" "vera_deploys" {
