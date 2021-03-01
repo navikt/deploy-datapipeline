@@ -5,7 +5,7 @@ on:
     branches:
       - "main"
     paths:
-      - "bigquery/**"
+      - "bigquery/terraform**"
 
 jobs:
   apply:
@@ -30,12 +30,12 @@ jobs:
       - name: Terraform Init
         id: init
         run: terraform init
-        working-directory: bigquery
+        working-directory: bigquery/terraform
 
       - name: Terraform Apply
         id: apply
         run: terraform apply -no-color plan.zip
-        working-directory: bigquery
+        working-directory: bigquery/terraform
         continue-on-error: true
 
       - name: Add comment
