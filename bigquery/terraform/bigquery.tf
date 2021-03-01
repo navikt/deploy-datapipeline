@@ -36,35 +36,35 @@ resource "google_bigquery_table" "vera_deploys" {
 [
   {
     "name": "environment",
-    "type": "STRING",
+    "type": "STRING"
   },
   {
     "name": "application",
-    "type": "STRING",
+    "type": "STRING"
   },
   {
     "name": "version",
-    "type": "STRING",
+    "type": "STRING"
   },
   {
     "name": "deployer",
-    "type": "STRING",
+    "type": "STRING"
   },
   {
     "name": "deployed_timestamp",
-    "type": "TIMESTAMP",
+    "type": "TIMESTAMP"
   },
   {
     "name": "replaced_timestamp",
-    "type": "TIMESTAMP",
+    "type": "TIMESTAMP"
   },
   {
     "name": "environmentClass",
-    "type": "STRING",
+    "type": "STRING"
   },
   {
     "name": "id",
-    "type": "STRING",
+    "type": "STRING"
   }
 ]
 EOF
