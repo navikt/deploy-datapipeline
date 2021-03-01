@@ -27,7 +27,7 @@ gcloud projects add-iam-policy-binding "${TERRAFORM_PROJECT_ID}" --member "servi
 if $(gcloud iam service-accounts keys list --iam-account "$TERRAFORM_USERNAME"@"$TERRAFORM_PROJECT_ID".iam.gserviceaccount.com  --format="json" --managed-by=user | $jq 'length == 0'); then
   echo -e "\nGenerating key"
   gcloud iam service-accounts keys create service_account_key_to_be_copied_to_github_secret.json --iam-account "$TERRAFORM_USERNAME"@"$TERRAFORM_PROJECT_ID".iam.gserviceaccount.com
-  echo "${RED}IMPORTANT: Remember to update the secret GCP_KEY at https://github.com/navikt/aiven-iac/settings/secrets/GCP_KEY to give Terraform access to the GCP bucket!"
+  echo "${RED}IMPORTANT: Remember to update the secret GCP_KEY at https://github.com/navikt/deploy-datapipeline/settings/secrets/GCP_KEY to give Terraform access to the GCP bucket!"
   echo "Copy the whole content of the file service_account_key_to_be_copied_to_github_secret.json into the secret.${NC}"
 else
   echo -e "\n${RED}It already exists one or more user-managed keys. These must be deleted before creating a new key.${NC}"
