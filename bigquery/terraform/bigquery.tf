@@ -6,7 +6,7 @@ terraform {
 
 provider "google" {
   version = "3.45.0"
-  project = "nais-analyse-prod"
+  project = "nais-analyse-prod-2dcc"
   region  = "europe-north1"
 }
 
@@ -19,5 +19,5 @@ resource "google_project_service" "service" {
     "compute.googleapis.com"
   ])
   service                    = each.key
-  disable_dependent_services = false  
+  disable_dependent_services = false
 }
