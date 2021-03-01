@@ -30,12 +30,12 @@ jobs:
       - name: Terraform Init
         id: init
         run: terraform init
-        working-directory: terraform
+        working-directory: bigquery
 
       - name: Terraform Apply
         id: apply
         run: terraform apply -no-color plan.zip
-        working-directory: terraform
+        working-directory: bigquery
         continue-on-error: true
 
       - name: Add comment
