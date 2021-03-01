@@ -1,0 +1,25 @@
+name: deploy load vera deploy function
+
+on:
+  push:
+    branches:
+      - "main"
+    paths:
+      - "load_vera_deploys/**"
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - id: deploy
+        uses: google-github-actions/deploy-cloud-functions@main
+        with:
+          name: load_vera_deploys
+          runtime: python39
+          credentials: ${{ secrets.GCP_KEY }}
+          source_dir: load_vera_deploys
+          project_id: nais-analyse-prod-2dcc
+          entry_point: write_vera_history_to_bq
+          region: europe_north1
+          service_account_email:

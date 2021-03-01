@@ -31,7 +31,7 @@ resource "google_bigquery_dataset" "default" {
 
 resource "google_bigquery_table" "vera_deploys" {
   dataset_id = google_bigquery_dataset.default.dataset_id
-  table_id   = "vera_deploys"
+  table_id = "vera_deploys"
 
   schema = <<EOF
 [
@@ -69,5 +69,25 @@ resource "google_bigquery_table" "vera_deploys" {
   }
 ]
 EOF
+}
+resource "google_bigquery_job" "job" {
+  job_id     = "vera_deploy_load"
 
+  load {
+    source_uris = [
+      "gs://cloud-samples-data/bigquery/us-states/us-states-by-date.csv",
+    ]
+
+    destination_table {
+      project_id = google_bigquery_table.foo.project
+      dataset_id = google_bigquery_table.foo.dataset_id
+      table_id   = google_bigquery_table.foo.table_id
+    }
+
+    skip_leading_rows = 1
+    schema_update_options = ["ALLOW_FIELD_RELAXATION", "ALLOW_FIELD_ADDITION"]
+
+    write_disposition = "WRITE_APPEND"
+    autodetect = true
+  }
 }
