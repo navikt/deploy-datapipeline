@@ -9,7 +9,7 @@ on:
       - ".github/workflows/function.yaml"
 
 jobs:
-  apply:
+  deploy-function:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -22,4 +22,4 @@ jobs:
           source_dir: load_vera_deploys
           project_id: nais-analyse-prod-2dcc
           entry_point: write_vera_history_to_bq
-          region: europe_north1
+          region: europe-west1
