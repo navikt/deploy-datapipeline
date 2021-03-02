@@ -7,7 +7,7 @@ terraform {
 provider "google" {
   version = "3.45.0"
   project = "nais-analyse-prod-2dcc"
-  region  = "europe-north1"
+  region = "europe-north1"
 }
 
 
@@ -20,15 +20,15 @@ resource "google_project_service" "service" {
     "iam.googleapis.com",
     "cloudresourcemanager.googleapis.com"
   ])
-  service                    = each.key
+  service = each.key
   disable_dependent_services = false
 }
 
 resource "google_bigquery_dataset" "default" {
-  dataset_id                  = "deploys"
-  friendly_name               = "deploys"
-  description                 = "Data about nais deploys"
-  location                    = "europe-north1"
+  dataset_id = "deploys"
+  friendly_name = "deploys"
+  description = "Data about nais deploys"
+  location = "europe-north1"
 }
 
 resource "google_bigquery_table" "vera_deploys" {
@@ -74,15 +74,15 @@ EOF
 }
 
 resource "google_service_account" "function-load-vera-deploys" {
+  display_name = "function-runner"
   account_id = "function-load-vera-deploys"
 }
 
-data "google_iam_policy" "function" {
-  binding {
-    role = "roles/iam.serviceAccountUser"
+resource "google_service_account_iam_binding" "function-account" {
+  service_account_id = google_service_account.function-load-vera-deploys.name
+  role = "roles/iam.serviceAccountUser"
 
-    members = [
-      "function-load-vera-deploys@nais-analyse-prod-2dcc.iam.gserviceaccount.com",
-    ]
-  }
+  members = [
+    "function-load-vera-deploys@nais-analyse-prod-2dcc.iam.gserviceaccount.com",
+  ]
 }
