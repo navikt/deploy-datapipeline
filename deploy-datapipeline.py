@@ -45,7 +45,7 @@ class veradata():
     def write_vera_history_to_bq(self, filename):
         client = bigquery.Client()
         logger.info(client)
-        logger.info(repr(client))
+        logger.info(dir(client))
         job_config = bigquery.LoadJobConfig(
             schema=[
                 bigquery.SchemaField("environment", "STRING"),
