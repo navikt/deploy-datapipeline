@@ -20,7 +20,7 @@ spec:
   datasetRef:
     name: deploys
   friendlyName: vera-deploys
-  schema: <<EOF
+  schema: |
     [
       {
         "name": "environment",
@@ -55,4 +55,3 @@ spec:
         "type": "STRING"
       }
     ]
-  EOF
