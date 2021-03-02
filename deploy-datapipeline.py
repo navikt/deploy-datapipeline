@@ -60,7 +60,8 @@ class veradata():
         )
 
         source_uri = "gs://deployments-vera/" + filename
-        table_id = "nais-analyse-prod-2dcc:deploys.vera-deploys"
+        print(source_uri)
+        table_id = "nais-analyse-prod-2dcc.deploys.vera-deploys"
         load_job = client.load_table_from_uri(source_uri, table_id, job_config=job_config)
         load_job.result()
 
