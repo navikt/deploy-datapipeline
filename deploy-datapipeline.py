@@ -4,7 +4,7 @@ import threading
 import atexit
 import requests
 import logging
-from google.cloud import storage
+from google.cloud import storage, bigquery
 import datetime
 
 POOL_TIME = 5  # Seconds
@@ -40,6 +40,33 @@ class veradata():
         blob_name = date + "deploys-vera.csv"
         blob = bucket.blob(blob_name)
         blob.upload_from_string(str(bytes))
+        return blob_name
+
+    def write_vera_history_to_bq(self, filename):
+        client = bigquery.Client()
+        job_config = bigquery.LoadJobConfig(
+            schema=[
+                bigquery.SchemaField("environment", "STRING"),
+                bigquery.SchemaField("application", "STRING"),
+                bigquery.SchemaField("version", "STRING"),
+                bigquery.SchemaField("deployer", "STRING"),
+                bigquery.SchemaField("deployed_timestamp", "TIMESTAMP"),
+                bigquery.SchemaField("replaced_timestamp", "TIMESTAMP"),
+                bigquery.SchemaField("environmentClass", "STRING"),
+                bigquery.SchemaField("id", "STRING")
+            ],
+            skip_leading_rows=1,
+            source_format=bigquery.SourceFormat.CSV
+        )
+
+        source_uri = "gs://deployments-vera/" + filename
+        table_id = "nais-analyse-prod-2dcc:deploys.vera-deploys"
+        load_job = client.load_table_from_uri(source_uri, table_id, job_config=job_config)
+        load_job.result()
+
+        destination_table = client.get_table(table_id)  # Make an API request.
+        print("Loaded {} rows.".format(destination_table.num_rows))
+
 
 def createApp():
     app = Flask(__name__)
@@ -91,6 +118,5 @@ def isAlive():
 
 
 if __name__ == "__main__":
-    print("test")
     logger.info("starting service")
     app.run(host='0.0.0.0', port=8080)
