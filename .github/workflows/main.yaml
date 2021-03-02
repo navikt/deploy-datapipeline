@@ -1,13 +1,11 @@
-name: "Build and deploy vera extractor"
+name: "Build and deploy deploy-datapipeline"
 on:
   push:
     branches:
       - "main"
-    paths:
-      - "vera-extractor/**"
-      - ".github/workflows/vera-extractor.yaml"
+
 env:
-  "IMAGE": docker.pkg.github.com/${{ github.repository }}/vera-extractor:${{ github.sha }}
+  "IMAGE": docker.pkg.github.com/${{ github.repository }}/deploy-datapipeline:${{ github.sha }}
 
 jobs:
   build:
@@ -28,7 +26,7 @@ jobs:
         run: |
           pytest
       - name: Build and push docker image
-        run: "docker build --pull --tag ${IMAGE} ./vera-extractor && echo $GITHUB_TOKEN | docker login\
+        run: "docker build --pull --tag ${IMAGE} . && echo $GITHUB_TOKEN | docker login\
                 \ --username $GITHUB_REPOSITORY --password-stdin https://docker.pkg.github.com\
                 \ && docker push ${IMAGE}"
         env:
@@ -44,4 +42,4 @@ jobs:
         env:
           "APIKEY": "${{ secrets.NAIS_DEPLOY_APIKEY }}"
           "CLUSTER": "prod-gcp"
-          "RESOURCE": "vera-extractor/nais.yaml"
+          "RESOURCE": "nais.yaml"
