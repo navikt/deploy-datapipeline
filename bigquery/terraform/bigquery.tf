@@ -16,7 +16,8 @@ resource "google_project_service" "service" {
     "cloudscheduler.googleapis.com",
     "bigquery.googleapis.com",
     "cloudfunctions.googleapis.com",
-    "compute.googleapis.com"
+    "compute.googleapis.com",
+    "cloudresourcemanager.googleapis.com"
   ])
   service                    = each.key
   disable_dependent_services = false
