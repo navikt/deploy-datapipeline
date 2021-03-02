@@ -70,3 +70,7 @@ resource "google_bigquery_table" "vera_deploys" {
 ]
 EOF
 }
+
+resource "google_service_account" "function-load-vera-deploys" {
+  account_id = "function-load-vera-deploys"
+}
