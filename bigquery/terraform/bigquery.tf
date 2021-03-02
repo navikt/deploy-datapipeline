@@ -17,7 +17,7 @@ resource "google_project_service" "service" {
     "bigquery.googleapis.com",
     "cloudfunctions.googleapis.com",
     "compute.googleapis.com",
-    "cloudresourcemanager.googleapis.com"
+    "iam.googleapis.com"
   ])
   service                    = each.key
   disable_dependent_services = false
