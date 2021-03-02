@@ -22,4 +22,3 @@ jobs:
           project_id: nais-analyse-prod-2dcc
           entry_point: write_vera_history_to_bq
           region: europe_north1
-          service_account_email:
