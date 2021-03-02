@@ -23,4 +23,4 @@ jobs:
           project_id: nais-analyse-prod-2dcc
           entry_point: write_vera_history_to_bq
           region: europe-west1
-          service_account_email: nais-analyse-prod-2dcc@appspot.gserviceaccount.com
+          service_account_email: function-load-vera-deploys@appspot.gserviceaccount.com

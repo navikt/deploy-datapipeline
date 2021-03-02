@@ -82,7 +82,7 @@ data "google_iam_policy" "function" {
     role = "roles/iam.serviceAccountUser"
 
     members = [
-      "nais-analyse-prod-2dcc@appspot.gserviceaccount.com",
+      "function-load-vera-deploys@appspot.gserviceaccount.com",
     ]
   }
 }
