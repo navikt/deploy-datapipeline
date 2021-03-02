@@ -6,6 +6,7 @@ on:
       - "main"
     paths:
       - "load_vera_deploys/**"
+      - ".github/workflows/function.yaml"
 
 jobs:
   apply:
