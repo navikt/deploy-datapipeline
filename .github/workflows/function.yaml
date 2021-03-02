@@ -22,4 +22,4 @@ jobs:
           source_dir: load_vera_deploys
           project_id: nais-analyse-prod-2dcc
           entry_point: write_vera_history_to_bq
-          region: europe-west1
+          region: europe_west1
