@@ -76,3 +76,13 @@ EOF
 resource "google_service_account" "function-load-vera-deploys" {
   account_id = "function-load-vera-deploys"
 }
+
+data "google_iam_policy" "function" {
+  binding {
+    role = "roles/iam.serviceAccountUser"
+
+    members = [
+      "nais-analyse-prod-2dcc@appspot.gserviceaccount.com",
+    ]
+  }
+}
