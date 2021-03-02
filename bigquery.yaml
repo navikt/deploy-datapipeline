@@ -1,0 +1,58 @@
+apiVersion: bigquery.cnrm.cloud.google.com/v1beta1
+kind: BigQueryDataset
+metadata:
+  annotations:
+    cnrm.cloud.google.com/delete-contents-on-destroy: "false"
+  name: deploys
+spec:
+  description: "Data about nais deploys"
+  friendlyName: deploys
+  location: europe-north1
+
+---
+
+apiVersion: bigquery.cnrm.cloud.google.com/v1beta1
+kind: BigQueryTable
+metadata:
+  name: vera-deploys
+spec:
+  description: "Historical deploys from Vera"
+  datasetRef:
+    name: deploys
+  friendlyName: vera-deploys
+  schema: <<EOF
+    [
+      {
+        "name": "environment",
+        "type": "STRING"
+      },
+      {
+        "name": "application",
+        "type": "STRING"
+      },
+      {
+        "name": "version",
+        "type": "STRING"
+      },
+      {
+        "name": "deployer",
+        "type": "STRING"
+      },
+      {
+        "name": "deployed_timestamp",
+        "type": "TIMESTAMP"
+      },
+      {
+        "name": "replaced_timestamp",
+        "type": "TIMESTAMP"
+      },
+      {
+        "name": "environmentClass",
+        "type": "STRING"
+      },
+      {
+        "name": "id",
+        "type": "STRING"
+      }
+    ]
+  EOF
