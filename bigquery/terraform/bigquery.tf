@@ -83,6 +83,6 @@ resource "google_service_account_iam_binding" "function-account" {
   role = "roles/iam.serviceAccountUser"
 
   members = [
-    "function-load-vera-deploys@nais-analyse-prod-2dcc.iam.gserviceaccount.com",
+    "serviceAccount:function-load-vera-deploys@nais-analyse-prod-2dcc.iam.gserviceaccount.com",
   ]
 }
