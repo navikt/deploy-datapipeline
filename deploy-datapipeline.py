@@ -44,6 +44,7 @@ class veradata():
 
     def write_vera_history_to_bq(self, filename):
         client = bigquery.Client()
+        print("Acting as: " + client.get_service_account_email())
         job_config = bigquery.LoadJobConfig(
             schema=[
                 bigquery.SchemaField("environment", "STRING"),
@@ -67,6 +68,7 @@ class veradata():
 
         destination_table = client.get_table(table_id)  # Make an API request.
         print("Loaded {} rows.".format(destination_table.num_rows))
+
 
 
 def createApp():
