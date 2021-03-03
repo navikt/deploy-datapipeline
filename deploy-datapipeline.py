@@ -25,7 +25,7 @@ class veradata():
     def getdeploydatafromvera(self):
         start = time.time()
         response = requests.get("https://vera.nais.oera.no/api/v1/deploylog?environment=p&csv=true")
-        logger.info("vera: Time: {} seconds, size {}".format(str(time.time() - start)), str(len(response.content)))
+        logger.info("vera: Time: {} seconds, size {}".format(str(time.time() - start), str(len(response.content))))
         return str(response.content, encoding="utf-8")
 
     def writecodetobucket(self, file_as_string):
