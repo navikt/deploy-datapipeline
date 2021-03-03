@@ -43,12 +43,11 @@ class veradata():
         return blob_name
 
     def write_vera_history_to_bq(self, filename):
-        client = bigquery.Client(project="nais-analyse-prod-2dcc")
+        client = bigquery.Client(project="nais-analyse-prod-2dcc", location='europe-north1')
         job_config = bigquery.LoadJobConfig(
             skip_leading_rows=1,
             source_format=bigquery.SourceFormat.CSV,
-            write_disposition=bigquery.WriteDisposition.WRITE_TRUNCATE,
-            location='europe-north1'
+            write_disposition=bigquery.WriteDisposition.WRITE_TRUNCATE
         )
 
         source_uri = "gs://deployments-vera/" + filename
