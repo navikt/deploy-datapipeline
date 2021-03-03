@@ -39,7 +39,8 @@ class veradata():
         date = today.strftime("%b-%d-%Y")
         blob_name = date + "deploys-vera.csv"
         blob = bucket.blob(blob_name)
-        blob.upload_from_string(str(bytes))
+        s = str(bytes)
+        blob.upload_from_string(s[2:len(s) - 1])
         return blob_name
 
     def write_vera_history_to_bq(self, filename):
