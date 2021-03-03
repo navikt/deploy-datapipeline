@@ -26,7 +26,7 @@ class veradata():
         logger.info("get data from vera")
         start = time.time()
         response = requests.get("https://vera.nais.oera.no/api/v1/deploylog?environment=p&csv=true")
-        #response = requests.get("https://vera.adeo.no/api/v1/deploylog?environment=p&csv=true")
+        # response = requests.get("https://vera.adeo.no/api/v1/deploylog?environment=p&csv=true")
         end = time.time()
         logger.info("vera.time " + str(end - start) + " seconds. ")
         logger.info("vera.size " + str(len(response.content)) + " bytes. ")
@@ -40,7 +40,9 @@ class veradata():
         blob_name = date + "deploys-vera.csv"
         blob = bucket.blob(blob_name)
 
-        s = str(bytes, encoding="utf-8")[2:len(s) - 1].replace('\r\n', '\n')
+        s = str(bytes, encoding="utf-8")
+        s = s[2:len(s) - 1]
+        s = s.replace('\r\n', '\n')
 
         blob.upload_from_string(s, content_type="text/csv")
 
