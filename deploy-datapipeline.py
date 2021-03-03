@@ -47,7 +47,8 @@ class veradata():
         job_config = bigquery.LoadJobConfig(
             skip_leading_rows=1,
             source_format=bigquery.SourceFormat.CSV,
-            write_disposition=bigquery.WriteDisposition.WRITE_TRUNCATE
+            write_disposition=bigquery.WriteDisposition.WRITE_TRUNCATE,
+            location='europe-north1'
         )
 
         source_uri = "gs://deployments-vera/" + filename
