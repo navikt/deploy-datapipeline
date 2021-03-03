@@ -43,7 +43,7 @@ class veradata():
 
         s = str(bytes)
         s = s[2:len(s) - 1]
-        s.replace('\r\n', '\n')
+        s = s.replace('\r\n', '\n')
 
         blob.upload_from_string(s, content_type="text/csv")
 
