@@ -54,14 +54,18 @@ class veradata():
         logger.info(source_uri)
         table_id = "nais-analyse-prod-2dcc.deploys.vera-deploys"
         load_job = client.load_table_from_uri(source_uri, table_id, job_config=job_config)
+
         logger.info(f"Starting job {load_job.job_id} in project {load_job.project}")
+        logger.info("Details for job {} running in {}:".format(load_job.job_id, load_job.location))
+        logger.info(
+            "\tType: {}\n\tState: {}\n\tCreated: {}".format(
+                load_job.job_type, load_job.state, load_job.created
+            )
+        )
         load_job.result()
-        job_info = client.get_job(load_job.job_id)
-        logger.info(f"Details for {job_info.job_id} running in {job_info.location}: Type: {job_info.job_type}, state: {job_info.state}, created: {job_info.created}")
 
         destination_table = client.get_table(table_id)  # Make an API request.
         logger.info("Loaded {} rows.".format(destination_table.num_rows))
-
 
 
 def createApp():
