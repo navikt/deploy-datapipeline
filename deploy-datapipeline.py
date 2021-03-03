@@ -54,6 +54,7 @@ class veradata():
         logger.info(source_uri)
         table_id = "nais-analyse-prod-2dcc.deploys.vera-deploys"
         load_job = client.load_table_from_uri(source_uri, table_id, job_config=job_config)
+        logger.info(f"Starting job {load_job.job_id} in project {load_job.project}")
         load_job.result()
 
         destination_table = client.get_table(table_id)  # Make an API request.
