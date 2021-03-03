@@ -44,7 +44,6 @@ class veradata():
 
     def write_vera_history_to_bq(self, filename):
         client = bigquery.Client(project="nais-analyse-prod-2dcc")
-        logger.info(dir(client))
         job_config = bigquery.LoadJobConfig(
             schema=[
                 bigquery.SchemaField("environment", "STRING"),
@@ -64,7 +63,8 @@ class veradata():
         logger.info(source_uri)
         table_id = "nais-analyse-prod-2dcc.deploys.vera-deploys"
         load_job = client.load_table_from_uri(source_uri, table_id, job_config=job_config)
-        load_job.result()
+        result = load_job.result()
+        logger.info(result)
 
         destination_table = client.get_table(table_id)  # Make an API request.
         logger.info("Loaded {} rows.".format(destination_table.num_rows))
