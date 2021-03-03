@@ -45,16 +45,6 @@ class veradata():
     def write_vera_history_to_bq(self, filename):
         client = bigquery.Client(project="nais-analyse-prod-2dcc")
         job_config = bigquery.LoadJobConfig(
-            schema=[
-                bigquery.SchemaField("environment", "STRING"),
-                bigquery.SchemaField("application", "STRING"),
-                bigquery.SchemaField("version", "STRING"),
-                bigquery.SchemaField("deployer", "STRING"),
-                bigquery.SchemaField("deployed_timestamp", "TIMESTAMP"),
-                bigquery.SchemaField("replaced_timestamp", "TIMESTAMP"),
-                bigquery.SchemaField("environmentClass", "STRING"),
-                bigquery.SchemaField("id", "STRING")
-            ],
             skip_leading_rows=1,
             source_format=bigquery.SourceFormat.CSV,
             write_disposition=bigquery.WriteDisposition.WRITE_TRUNCATE
