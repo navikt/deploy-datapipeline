@@ -46,7 +46,7 @@ class veradata():
     def write_vera_history_to_bq(self, filename):
         client = bigquery.Client(project="nais-analyse-prod-2dcc", location='europe-north1')
         job_config = bigquery.LoadJobConfig(
-            skip_leading_rows=1,
+            skip_leading_rows=0,
             source_format=bigquery.SourceFormat.CSV,
             write_disposition=bigquery.WriteDisposition.WRITE_TRUNCATE
         )
