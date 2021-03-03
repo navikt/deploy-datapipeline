@@ -25,8 +25,8 @@ class veradata():
     def getdeploydatafromvera(self):
         logger.info("get data from vera")
         start = time.time()
-        #response = requests.get("https://vera.nais.oera.no/api/v1/deploylog?environment=p&csv=true")
-        response = requests.get("https://vera.adeo.no/api/v1/deploylog?environment=p&csv=true")
+        response = requests.get("https://vera.nais.oera.no/api/v1/deploylog?environment=p&csv=true")
+        #response = requests.get("https://vera.adeo.no/api/v1/deploylog?environment=p&csv=true")
         end = time.time()
         logger.info("vera.time " + str(end - start) + " seconds. ")
         logger.info("vera.size " + str(len(response.content)) + " bytes. ")
@@ -52,7 +52,7 @@ class veradata():
     def write_vera_history_to_bq(self, filename):
         client = bigquery.Client(project="nais-analyse-prod-2dcc", location='europe-north1')
         job_config = bigquery.LoadJobConfig(
-            skip_leading_rows=0,
+            skip_leading_rows=1,
             source_format=bigquery.SourceFormat.CSV,
             write_disposition=bigquery.WriteDisposition.WRITE_TRUNCATE
         )
