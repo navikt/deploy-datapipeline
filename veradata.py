@@ -1,16 +1,9 @@
-from flask import Flask
-import time
-import threading
-import atexit
-import requests
-import logging
 from google.cloud import storage, bigquery
 import datetime
+import time
+import requests
+import logging
 
-POOL_TIME = 5  # Seconds
-
-# thread handler
-yourThread = threading.Thread()
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
 ch = logging.StreamHandler()
@@ -21,6 +14,11 @@ logger.addHandler(ch)
 
 
 class veradata():
+
+    def run(self):
+        bytes = self.getdeploydatafromvera()
+        blobname = self.writecodetobucket(bytes)
+        self.write_vera_history_to_bq(blobname)
 
     def getdeploydatafromvera(self):
         start = time.time()
@@ -51,57 +49,3 @@ class veradata():
         load_job.result()
         destination_table = client.get_table("nais-analyse-prod-2dcc.deploys.vera-deploys")
         logger.info("Loaded {} rows.".format(destination_table.num_rows))
-
-
-def createApp():
-    app = Flask(__name__)
-    vera = veradata()
-
-    logger.info("create app")
-
-    def interrupt():
-        global yourThread
-        yourThread.cancel()
-
-    def getdeploydatafromvera():
-        global yourThread
-        bytes = vera.getdeploydatafromvera()
-        blobname = vera.writecodetobucket(bytes)
-        vera.write_vera_history_to_bq(blobname)
-
-        # Set the next thread to happen
-        # yourThread = threading.Timer(POOL_TIME, getdeploydatafromvera(), ())
-        # yourThread.start()
-
-    def doStuffStart():
-        # Do initialisation stuff here
-        global yourThread
-        logger.info("do stuff start")
-
-        # Create your thread
-        yourThread = threading.Timer(POOL_TIME, getdeploydatafromvera, ())
-        yourThread.start()
-
-    # Initiate
-    doStuffStart()
-    # When you kill Flask (SIGTERM), clear the trigger for the next thread
-    atexit.register(interrupt)
-    return app
-
-
-app = createApp()
-
-
-@app.route('/isready')
-def isReady():
-    return "OK"
-
-
-@app.route('/isalive')
-def isAlive():
-    return "OK"
-
-
-if __name__ == "__main__":
-    logger.info("starting service")
-    app.run(host='0.0.0.0', port=8080)
