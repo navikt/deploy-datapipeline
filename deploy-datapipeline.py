@@ -43,7 +43,7 @@ class veradata():
         return blob_name
 
     def write_vera_history_to_bq(self, filename):
-        client = bigquery.Client()
+        client = bigquery.Client(project="nais-analyse-prod-2dcc")
         logger.info(client)
         logger.info(dir(client))
         job_config = bigquery.LoadJobConfig(
