@@ -4,6 +4,9 @@ import time
 import requests
 import logging
 
+BUCKET_NAME = "deployments-vera"
+PROJECT = "nais-analyse-prod-2dcc"
+
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
 ch = logging.StreamHandler()
@@ -16,9 +19,9 @@ logger.addHandler(ch)
 class veradata():
 
     def run(self):
-        bytes = self.getdeploydatafromvera()
-        blobname = self.writecodetobucket(bytes)
-        self.write_vera_history_to_bq(blobname)
+        data = self.getdeploydatafromvera()
+        filename = self.writecodetobucket(data)
+        self.write_vera_history_to_bq(filename)
 
     def getdeploydatafromvera(self):
         start = time.time()
@@ -28,17 +31,17 @@ class veradata():
 
     def writecodetobucket(self, file_as_string):
         client = storage.Client()
-        bucket = client.get_bucket("deployments-vera")
+        bucket = client.get_bucket(BUCKET_NAME)
         blob_name = datetime.date.today().strftime("%b-%d-%Y") + "-deploys-vera.csv"
         bucket.blob(blob_name).upload_from_string(file_as_string, content_type="text/csv")
         return blob_name
 
     def write_vera_history_to_bq(self, filename):
-        client = bigquery.Client(project="nais-analyse-prod-2dcc", location='europe-north1')
+        client = bigquery.Client(project=PROJECT, location='europe-north1')
         load_job = \
             client.load_table_from_uri(
-                "gs://deployments-vera/" + filename,
-                "nais-analyse-prod-2dcc.deploys.vera-deploys",
+                "gs://" + BUCKET_NAME + "/" + filename,
+                PROJECT + ".deploys.vera-deploys",
                 job_config=(bigquery.LoadJobConfig(
                     skip_leading_rows=1,
                     source_format=bigquery.SourceFormat.CSV,
