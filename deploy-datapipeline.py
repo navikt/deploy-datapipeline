@@ -56,15 +56,15 @@ class veradata():
                 bigquery.SchemaField("id", "STRING")
             ],
             skip_leading_rows=1,
-            source_format=bigquery.SourceFormat.CSV
+            source_format=bigquery.SourceFormat.CSV,
+            write_disposition=bigquery.WriteDisposition.WRITE_TRUNCATE
         )
 
         source_uri = "gs://deployments-vera/" + filename
         logger.info(source_uri)
         table_id = "nais-analyse-prod-2dcc.deploys.vera-deploys"
         load_job = client.load_table_from_uri(source_uri, table_id, job_config=job_config)
-        result = load_job.result()
-        logger.info(result)
+        load_job.result()
 
         destination_table = client.get_table(table_id)  # Make an API request.
         logger.info("Loaded {} rows.".format(destination_table.num_rows))
