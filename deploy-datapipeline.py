@@ -40,11 +40,7 @@ class veradata():
         blob_name = date + "deploys-vera.csv"
         blob = bucket.blob(blob_name)
 
-        s = str(bytes, encoding="utf-8")
-        s = s[2:len(s) - 1]
-        s = s.replace('\r\n', '\n')
-
-        blob.upload_from_string(s, content_type="text/csv")
+        blob.upload_from_string(str(bytes, encoding="utf-8"), content_type="text/csv")
 
         return blob_name
 
