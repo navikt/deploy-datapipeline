@@ -25,8 +25,8 @@ class veradata():
     def getdeploydatafromvera(self):
         logger.info("get data from vera")
         start = time.time()
-        response = requests.get("https://vera.nais.oera.no/api/v1/deploylog?environment=p&csv=true")
-        # response = requests.get("https://vera.adeo.no/api/v1/deploylog?environment=p&csv=true")
+        #response = requests.get("https://vera.nais.oera.no/api/v1/deploylog?environment=p&csv=true")
+        response = requests.get("https://vera.adeo.no/api/v1/deploylog?environment=p&csv=true")
         end = time.time()
         logger.info("vera.time " + str(end - start) + " seconds. ")
         logger.info("vera.size " + str(len(response.content)) + " bytes. ")
@@ -39,8 +39,14 @@ class veradata():
         date = today.strftime("%b-%d-%Y")
         blob_name = date + "deploys-vera.csv"
         blob = bucket.blob(blob_name)
+
+
         s = str(bytes)
-        blob.upload_from_string(s[2:len(s) - 1])
+        s = s[2:len(s) - 1]
+        s.replace('\r\n', '\n')
+
+        blob.upload_from_string(s, content_type="text/csv")
+
         return blob_name
 
     def write_vera_history_to_bq(self, filename):
