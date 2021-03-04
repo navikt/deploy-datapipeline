@@ -1,47 +1,8 @@
 from flask import Flask
 import threading
-import atexit
-import veradata
+from veradata import veradata
 
-POOL_TIME = 5  # Seconds
-
-# thread handler
-yourThread = threading.Thread()
-
-
-def createApp():
-    app = Flask(__name__)
-    vera = veradata()
-
-    def interrupt():
-        global yourThread
-        yourThread.cancel()
-
-    def loadVeraDataIntoBigQuery():
-        global yourThread
-        vera.run()
-
-    # Set the next thread to happen
-    # yourThread = threading.Timer(POOL_TIME, loadVeraDataIntoBigQuery(), ())
-    # yourThread.start()
-
-    def doStuffStart():
-        # Do initialisation stuff here
-        global yourThread
-
-        # Create your thread
-        yourThread = threading.Timer(POOL_TIME, loadVeraDataIntoBigQuery, ())
-        yourThread.start()
-
-    # Initiate
-    doStuffStart()
-    # When you kill Flask (SIGTERM), clear the trigger for the next thread
-    atexit.register(interrupt)
-    return app
-
-
-app = createApp()
-
+app = Flask(__name__)
 
 @app.route('/isready')
 def isReady():
@@ -54,4 +15,5 @@ def isAlive():
 
 
 if __name__ == "__main__":
+    threading.Thread(target=veradata().run, daemon=True).start()
     app.run(host='0.0.0.0', port=8080)

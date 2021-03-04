@@ -7,13 +7,8 @@ import logging
 BUCKET_NAME = "deployments-vera"
 PROJECT = "nais-analyse-prod-2dcc"
 
+logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
-logger.setLevel(logging.DEBUG)
-ch = logging.StreamHandler()
-ch.setLevel(logging.DEBUG)
-formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-ch.setFormatter(formatter)
-logger.addHandler(ch)
 
 
 class veradata():
@@ -27,7 +22,7 @@ class veradata():
         start = time.time()
         response = requests.get("https://vera.nais.oera.no/api/v1/deploylog?environment=p&csv=true")
         logger.info("vera: Time: {} seconds, size {}".format(str(time.time() - start), str(len(response.content))))
-        return str(response.content, encoding="utf-8")
+        return response.text
 
     def writecodetobucket(self, file_as_string):
         client = storage.Client()
