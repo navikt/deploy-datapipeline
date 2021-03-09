@@ -5,6 +5,7 @@ import dataverk
 import datetime as dt
 import os
 
+PROJECT = "nais-analyse-prod-2dcc"
 
 def publiser_datapakke():
     os.environ["DATAVERK_API_ENDPOINT"] = "https://data.intern.nav.no/api"
@@ -67,6 +68,8 @@ def add_fig(dp, view, name):
 
 
 def create_dataframe():
+    pd.pandas_gbq.context.project = PROJECT
+
     raw = pd.read_gbq('SELECT * FROM `nais-analyse-prod-2dcc.deploys.vera-deploys`')
 
     df = raw.copy()
