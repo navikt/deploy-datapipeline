@@ -1,9 +1,9 @@
-import pandas as pd
 import plotly.express as px
 import plotly.io as pio
 import dataverk
 import datetime as dt
 import os
+from google.cloud import bigquery
 
 PROJECT = "nais-analyse-prod-2dcc"
 
@@ -68,13 +68,10 @@ def add_fig(dp, view, name):
 
 
 def create_dataframe():
-    pd.pandas_gbq.context.project = PROJECT
-
-    raw = pd.read_gbq('SELECT * FROM `nais-analyse-prod-2dcc.deploys.vera-deploys`')
-
-    df = raw.copy()
+    client = bigquery.Client(project=PROJECT, location='europe-north1')
+    sql = "SELECT * FROM `nais-analyse-prod-2dcc.deploys.vera-deploys`"
+    df = client.query(sql).to_dataframe()
     df = df[df['application'] != 'nais-deploy-canary']
-
     df['dato'] = df['deployed_timestamp'].dt.date
     df['ukenr'] = df['deployed_timestamp'].dt.isocalendar().week.astype('str')
     df['ukenr'] = df['ukenr'].apply(lambda x: x.zfill(2))
