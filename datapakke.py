@@ -4,8 +4,13 @@ import dataverk
 import datetime as dt
 import os
 from google.cloud import bigquery
+import logging
+
+logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+logger = logging.getLogger(__name__)
 
 PROJECT = "nais-analyse-prod-2dcc"
+
 
 def publiser_datapakke():
     os.environ["DATAVERK_API_ENDPOINT"] = "https://data.intern.nav.no/api"
@@ -69,7 +74,7 @@ def add_fig(dp, view, name):
 
 def create_dataframe():
     client = bigquery.Client(project=PROJECT, location='europe-north1')
-    sql = "SELECT * FROM `nais-analyse-prod-2dcc.deploys.vera-deploys`"
+    sql = "SELECT * FROM `nais-analyse-prod-2dcc.deploys.vera-deploys` LIMIT 100"
     df = client.query(sql).to_dataframe()
     df = df[df['application'] != 'nais-deploy-canary']
     df['dato'] = df['deployed_timestamp'].dt.date
