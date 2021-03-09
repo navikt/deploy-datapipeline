@@ -3,6 +3,7 @@ import datetime
 import time
 import requests
 import logging
+import datapakke
 
 BUCKET_NAME = "deployments-vera"
 PROJECT = "nais-analyse-prod-2dcc"
@@ -17,6 +18,7 @@ class veradata():
         data = self.getdeploydatafromvera()
         filename = self.writecodetobucket(data)
         self.write_vera_history_to_bq(filename)
+        datapakke.publiser_datapakke()
 
     def getdeploydatafromvera(self):
         start = time.time()
