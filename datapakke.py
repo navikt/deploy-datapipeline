@@ -82,7 +82,7 @@ def create_dataframe():
         logging.info(row)
 
     logging.info("result recived from bq")
-    df = result.to_dataframe(create_bqstorage_client=True)
+    df = result.to_dataframe(create_bqstorage_client=False)
     logging.info("extrated dataframe")
     df = df[df['application'] != 'nais-deploy-canary']
     df['dato'] = df['deployed_timestamp'].dt.date
