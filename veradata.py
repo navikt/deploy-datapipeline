@@ -16,9 +16,8 @@ class veradata():
 
     def run(self):
         data = self.getdeploydatafromvera()
-        filename = self.writecodetobucket(data)
-        self.write_vera_history_to_bq(filename)
-        datapakke.publiser_datapakke()
+        fileURI = self.writecodetobucket(data)
+        datapakke.publiser_datapakke(fileURI)
 
     def getdeploydatafromvera(self):
         start = time.time()
@@ -29,23 +28,7 @@ class veradata():
     def writecodetobucket(self, file_as_string):
         client = storage.Client()
         bucket = client.get_bucket(BUCKET_NAME)
-        blob_name = datetime.date.today().strftime("%b-%d-%Y") + "-deploys-vera.csv"
+        blob_name = datetime.date.today().strftime("%Y-%m-%d") + "-deploys-vera.csv"
         bucket.blob(blob_name).upload_from_string(file_as_string, content_type="text/csv")
-        return blob_name
+        return "gs://" + BUCKET_NAME + "/" + blob_name
 
-    def write_vera_history_to_bq(self, filename):
-        client = bigquery.Client(project=PROJECT, location='europe-north1')
-        load_job = \
-            client.load_table_from_uri(
-                "gs://" + BUCKET_NAME + "/" + filename,
-                PROJECT + ".deploys.vera-deploys",
-                job_config=(bigquery.LoadJobConfig(
-                    skip_leading_rows=1,
-                    source_format=bigquery.SourceFormat.CSV,
-                    write_disposition=bigquery.WriteDisposition.WRITE_TRUNCATE
-                )))
-
-        logger.info(f"Starting job {load_job.job_id} in project {load_job.project}")
-        load_job.result()
-        destination_table = client.get_table("nais-analyse-prod-2dcc.deploys.vera-deploys")
-        logger.info("Loaded {} rows.".format(destination_table.num_rows))

@@ -6,3 +6,4 @@ google-cloud-storage==1.36.0
 google-cloud-bigquery==2.10.0
 plotly==4.14.3
 dataverk==0.3.24
+gcsfs==0.7.2

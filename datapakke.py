@@ -3,7 +3,7 @@ import plotly.io as pio
 import dataverk
 import datetime as dt
 import os
-from google.cloud import bigquery
+import gcsfs
 import pandas
 import logging
 
@@ -13,7 +13,7 @@ logger = logging.getLogger(__name__)
 PROJECT = "nais-analyse-prod-2dcc"
 
 
-def publiser_datapakke():
+def publiser_datapakke(file_uri):
     os.environ["DATAVERK_API_ENDPOINT"] = "https://data.intern.nav.no/api"
     os.environ["DATAVERK_BUCKET_ENDPOINT"] = "https://dv-api-intern.prod-gcp.nais.io/storage"
     os.environ["DATAVERK_ES_HOST"] = "https://dv-api-intern.prod-gcp.nais.io/index/write/dcat"
@@ -23,13 +23,13 @@ def publiser_datapakke():
     dv.publish(dp)
 
 
-def lag_datapakke():
+def lag_datapakke(file_uri):
     metadata = create_metadata(titel='Deployment av applikasjon i NAV',
                                description='Viser antall deploys av applikasjoner i NAV siden 2009.',
                                forfatter='Gøran Berntsen', forfatter_epost='goran.berntsen@nav.no')
 
     dp = dataverk.Datapackage(metadata)
-    df = create_dataframe()
+    df = create_dataframe(file_uri)
     for år, view in app_pr_year(df).items():
         add_fig(dp, view, "Mest deployet apps i {}".format(str(år)))
 
@@ -73,16 +73,12 @@ def add_fig(dp, view, name):
     dp.add_view(spec=pio.to_json(view), spec_type="plotly", name=name, title=name)
 
 
-def create_dataframe():
-    client = bigquery.Client(project=PROJECT, location='europe-north1')
-    sql = "SELECT * FROM `nais-analyse-prod-2dcc.deploys.vera-deploys` LIMIT 100"
-    result = client.query(sql)
+def create_dataframe(file_uri):
 
-    for row in result:
-        logging.info(row)
+    fs = gcsfs.GCSFileSystem(project=PROJECT)
+    with fs.open(file_uri) as f:
+        df = pandas.read_csv(f)
 
-    logging.info("result recived from bq")
-    df = result.to_dataframe(create_bqstorage_client=False)
     logging.info("extrated dataframe")
     df = df[df['application'] != 'nais-deploy-canary']
     df['dato'] = df['deployed_timestamp'].dt.date
