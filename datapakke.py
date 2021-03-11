@@ -6,12 +6,14 @@ import os
 import pandas
 import logging
 from google.cloud import storage
+from io import BytesIO, StringIO
 
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
 BUCKET_NAME = "deployments-vera"
 PROJECT = "nais-analyse-prod-2dcc"
+
 
 def publiser_datapakke(file_uri):
     os.environ["DATAVERK_API_ENDPOINT"] = "https://data.intern.nav.no/api"
@@ -74,11 +76,16 @@ def add_fig(dp, view, name):
 
 
 def create_dataframe(file_uri):
-
     client = storage.Client()
     bucket = client.get_bucket(BUCKET_NAME)
 
-    df = pandas.read_csv(bucket.get_blob(file_uri).download_as_string())
+    blob = bucket.get_blob(file_uri)
+
+    byte_stream = BytesIO()
+    blob.download_to_file(byte_stream)
+    byte_stream.seek(0)
+
+    df = pandas.read_csv(byte_stream)
 
     logging.info("extrated dataframe")
     df = df[df['application'] != 'nais-deploy-canary']
