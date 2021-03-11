@@ -3,15 +3,15 @@ import plotly.io as pio
 import dataverk
 import datetime as dt
 import os
-import gcsfs
 import pandas
 import logging
+from google.cloud import storage
 
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
+BUCKET_NAME = "deployments-vera"
 PROJECT = "nais-analyse-prod-2dcc"
-
 
 def publiser_datapakke(file_uri):
     os.environ["DATAVERK_API_ENDPOINT"] = "https://data.intern.nav.no/api"
@@ -75,9 +75,10 @@ def add_fig(dp, view, name):
 
 def create_dataframe(file_uri):
 
-    fs = gcsfs.GCSFileSystem(project=PROJECT)
-    with fs.open(file_uri) as f:
-        df = pandas.read_csv(f)
+    client = storage.Client()
+    bucket = client.get_bucket(BUCKET_NAME)
+
+    df = pandas.read_csv(bucket.get_blob(file_uri).download_as_string())
 
     logging.info("extrated dataframe")
     df = df[df['application'] != 'nais-deploy-canary']

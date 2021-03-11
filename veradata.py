@@ -1,4 +1,4 @@
-from google.cloud import storage, bigquery
+from google.cloud import storage
 import datetime
 import time
 import requests
