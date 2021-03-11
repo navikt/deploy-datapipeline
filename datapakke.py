@@ -18,7 +18,7 @@ def publiser_datapakke(file_uri):
     os.environ["DATAVERK_BUCKET_ENDPOINT"] = "https://dv-api-intern.prod-gcp.nais.io/storage"
     os.environ["DATAVERK_ES_HOST"] = "https://dv-api-intern.prod-gcp.nais.io/index/write/dcat"
 
-    dp = lag_datapakke()
+    dp = lag_datapakke(file_uri)
     dv = dataverk.Client()
     dv.publish(dp)
 
