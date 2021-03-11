@@ -76,7 +76,11 @@ def add_fig(dp, view, name):
 def create_dataframe():
     client = bigquery.Client(project=PROJECT, location='europe-north1')
     sql = "SELECT * FROM `nais-analyse-prod-2dcc.deploys.vera-deploys` LIMIT 100"
-    result = client.query(sql).result()
+    result = client.query(sql)
+
+    for row in result:
+        logging.info("name={}, count={}".format(row[0]))
+
     logging.info("result recived from bq")
     df = result.to_dataframe()
     logging.info("extrated dataframe")
