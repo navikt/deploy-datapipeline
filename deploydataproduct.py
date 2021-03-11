@@ -22,9 +22,7 @@ class DeployDataProduct():
     def getdeploydatafromvera(self):
         start = time.time()
         retry_strategy = Retry(
-            total=3,
-            status_forcelist=[429, 500, 502, 503, 504],
-            method_whitelist=["HEAD", "GET", "OPTIONS"]
+            total=10,
         )
         adapter = HTTPAdapter(max_retries=retry_strategy)
         http = requests.Session()
