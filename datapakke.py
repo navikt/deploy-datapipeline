@@ -4,6 +4,7 @@ import dataverk
 import datetime as dt
 import os
 from google.cloud import bigquery
+import pandas
 import logging
 
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
@@ -75,9 +76,10 @@ def add_fig(dp, view, name):
 def create_dataframe():
     client = bigquery.Client(project=PROJECT, location='europe-north1')
     sql = "SELECT * FROM `nais-analyse-prod-2dcc.deploys.vera-deploys` LIMIT 100"
-    result = client.query(sql)
+    result = client.query(sql).result()
     logging.info("result recived from bq")
     df = result.to_dataframe()
+    logging.info("extrated dataframe")
     df = df[df['application'] != 'nais-deploy-canary']
     df['dato'] = df['deployed_timestamp'].dt.date
     df['ukenr'] = df['deployed_timestamp'].dt.isocalendar().week.astype('str')
