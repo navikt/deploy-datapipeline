@@ -79,7 +79,7 @@ def create_dataframe():
     result = client.query(sql)
 
     for row in result:
-        logging.info("name={}, count={}".format(row[0]))
+        logging.info(row)
 
     logging.info("result recived from bq")
     df = result.to_dataframe()
