@@ -9,7 +9,7 @@ from google.cloud import storage
 
 
 class DeployDataPakke:
-    logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
     logger = logging.getLogger(__name__)
 
     BUCKET_NAME = "deployments-vera"
@@ -74,7 +74,6 @@ class DeployDataPakke:
     def create_dataframe(self, file_uri):
         client = storage.Client()
         bucket = client.get_bucket(self.BUCKET_NAME)
-        logging.info(file_uri)
         blob = bucket.get_blob(file_uri)
         data = blob.download_as_text()
 

@@ -8,7 +8,7 @@ import logging
 BUCKET_NAME = "deployments-vera"
 PROJECT = "nais-analyse-prod-2dcc"
 
-logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
 
