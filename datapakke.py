@@ -78,11 +78,8 @@ class DeployDataPakke:
         logging.info(file_uri)
         blob = bucket.get_blob(file_uri)
 
-        byte_stream = BytesIO()
-        blob.download_to_file(byte_stream)
-        byte_stream.seek(0)
-
-        df = pandas.read_csv(byte_stream)
+        data = blob.download_as_string()
+        df = pandas.read_csv(data)
 
         logging.info("extrated dataframe")
         logging.info("head: " + df.head())
