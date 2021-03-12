@@ -6,7 +6,7 @@ import os
 import pandas
 import logging
 from google.cloud import storage
-from io import BytesIO, StringIO
+from io import BytesIO
 
 
 class DeployDataPakke:
