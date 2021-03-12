@@ -6,6 +6,7 @@ import os
 import pandas
 import logging
 from google.cloud import storage
+from io import BytesIO
 
 
 class DeployDataPakke:
@@ -80,12 +81,15 @@ class DeployDataPakke:
         data = blob.download_as_text()
 
         #df = pandas.read_csv("gs://" + self.BUCKET_NAME + "/" + file_uri)
-        df = pandas.DataFrame()
+        #df = pandas.DataFrame()
 
         logging.info("read fil from bucket")
 
+        byte_stream = BytesIO()
+        blob.download_to_file(byte_stream)
+        byte_stream.seek(0)
 
-        #df = pandas.read_csv(data)
+        df = pandas.read_csv(byte_stream)
 
         logging.info("extrated dataframe")
 
