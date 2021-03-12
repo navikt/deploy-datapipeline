@@ -13,7 +13,6 @@ class DeployDataPakke:
     logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
     logger = logging.getLogger(__name__)
 
-
     BUCKET_NAME = "deployments-vera"
     PROJECT = "nais-analyse-prod-2dcc"
 
@@ -86,6 +85,9 @@ class DeployDataPakke:
         df = pandas.read_csv(byte_stream)
 
         logging.info("extrated dataframe")
+        logging.info("head: " + df.head())
+        logging.info("len: " + len(df))
+
         df = df[df['application'] != 'nais-deploy-canary']
         df['dato'] = df['deployed_timestamp'].dt.date
         df['ukenr'] = df['deployed_timestamp'].dt.isocalendar().week.astype('str')
