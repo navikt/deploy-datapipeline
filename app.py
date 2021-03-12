@@ -17,7 +17,8 @@ def isAlive():
 
 
 def run():
-    address = DeployDataProduct.run()
+    # address = DeployDataProduct.run()
+    address = "gs://deployments-vera/2021-03-11-deploys-vera.csv"
     DeployDataPakke.publiser_datapakke(address)
 
 

@@ -16,8 +16,7 @@ logger = logging.getLogger(__name__)
 class DeployDataProduct():
 
     def run(self):
-        #data = self.getdeploydatafromvera()
-        data = "gs://deployments-vera/2021-03-11-deploys-vera.csv"
+        data = self.getdeploydatafromvera()
         return self.writecodetobucket(data)
 
     def getdeploydatafromvera(self):
