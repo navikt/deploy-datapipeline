@@ -2,6 +2,7 @@ from flask import Flask
 import threading
 from deploydataproduct import DeployDataProduct
 from datapakke import DeployDataPakke
+import time
 
 app = Flask(__name__)
 
@@ -17,6 +18,7 @@ def isAlive():
 
 
 def run():
+    time.sleep(10)
     #produkt = DeployDataProduct()
     pakke = DeployDataPakke()
     # address = DeployDataProduct.run()
