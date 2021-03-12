@@ -83,7 +83,7 @@ class DeployDataPakke:
 
         logging.info("extrated dataframe")
         logging.info("head: " + df.head())
-        logging.info("len: " + len(df))
+        logging.info(f"len: {len(df)}")
 
         df = df[df['application'] != 'nais-deploy-canary']
         df['dato'] = df['deployed_timestamp'].dt.date
