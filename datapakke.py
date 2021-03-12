@@ -6,7 +6,7 @@ import os
 import pandas
 import logging
 from google.cloud import storage
-from io import BytesIO
+import gcsfs
 
 
 class DeployDataPakke:
@@ -75,21 +75,26 @@ class DeployDataPakke:
         dp.add_view(spec=pio.to_json(view), spec_type="plotly", name=name, title=name)
 
     def create_dataframe(self, file_uri):
-        client = storage.Client()
-        bucket = client.get_bucket(self.BUCKET_NAME)
-        blob = bucket.get_blob(file_uri)
-        #data = blob.download_as_text()
+        fs = gcsfs.GCSFileSystem(project=self.PROJECT)
+
+        with fs.open(self.BUCKET_NAME + "/" + file_uri) as f:
+            df = pandas.read_csv(f)
+
+        #client = storage.Client()
+        #bucket = client.get_bucket(self.BUCKET_NAME)
+        #blob = bucket.get_blob(file_uri)
+        # data = blob.download_as_text()
 
         # df = pandas.read_csv("gs://" + self.BUCKET_NAME + "/" + file_uri)
         # df = pandas.DataFrame()
 
         logging.info("read fil from bucket")
 
-        byte_stream = BytesIO()
-        blob.download_to_file(byte_stream.decode("utf-8") )
-        byte_stream.seek(0)
+        #byte_stream = BytesIO()
+        #blob.dow(byte_stream.decode("utf-8") )
+        #byte_stream.seek(0)
 
-        df = pandas.read_csv(byte_stream)
+        #df = pandas.read_csv(byte_stream)
 
         logging.info("head: " + df.head(5))
 
@@ -98,7 +103,7 @@ class DeployDataPakke:
         df = df[df['application'] != 'nais-deploy-canary']
         df['dato'] = df['deployed_timestamp'].dt.date
         df['ukenr'] = df['deployed_timestamp'].dt.isocalendar().week.astype('str')
-        df['ukenr'] = df['ukenr'].apply(lambda x: x.zfill(2))
+        df['ukenr'] = df['ukenr'].apply( lambda x: x.zfill(2))
         df['uke'] = df['deployed_timestamp'].dt.isocalendar().year.astype('str') + '-' + df['ukenr']
         df['år'] = df['deployed_timestamp'].dt.isocalendar().year
         df['app'] = df['application']
