@@ -77,8 +77,11 @@ class DeployDataPakke:
         bucket = client.get_bucket(self.BUCKET_NAME)
         logging.info(file_uri)
         blob = bucket.get_blob(file_uri)
+        data = blob.download_as_text()
 
-        data = blob.download_as_string()
+        #df = pandas.read_csv("gs://" + self.BUCKET_NAME + "/" + file_uri)
+        #df = pandas.DataFrame()
+
         df = pandas.read_csv(data)
 
         logging.info("extrated dataframe")
