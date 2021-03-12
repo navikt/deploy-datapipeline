@@ -6,7 +6,6 @@ import os
 import pandas
 import logging
 from google.cloud import storage
-from io import BytesIO
 
 
 class DeployDataPakke:
@@ -85,8 +84,8 @@ class DeployDataPakke:
         df = pandas.read_csv(data)
 
         logging.info("extrated dataframe")
-        logging.info("head: " + df.head())
-        logging.info(f"len: {len(df)}")
+        #logging.info("head: " + df.head())
+        #logging.info(f"len: {len(df)}")
 
         df = df[df['application'] != 'nais-deploy-canary']
         df['dato'] = df['deployed_timestamp'].dt.date
