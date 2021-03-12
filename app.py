@@ -22,7 +22,7 @@ def run():
     #produkt = DeployDataProduct()
     pakke = DeployDataPakke()
     # address = DeployDataProduct.run()
-    address = "gs://deployments-vera/2021-03-11-deploys-vera.csv"
+    address = "2021-03-11-deploys-vera.csv"
     pakke.publiser_datapakke(address)
 
 
