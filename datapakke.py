@@ -78,7 +78,7 @@ class DeployDataPakke:
         client = storage.Client()
         bucket = client.get_bucket(self.BUCKET_NAME)
         blob = bucket.get_blob(file_uri)
-        data = blob.download_as_text()
+        #data = blob.download_as_text()
 
         # df = pandas.read_csv("gs://" + self.BUCKET_NAME + "/" + file_uri)
         # df = pandas.DataFrame()
@@ -86,7 +86,7 @@ class DeployDataPakke:
         logging.info("read fil from bucket")
 
         byte_stream = BytesIO()
-        blob.download_to_file(byte_stream)
+        blob.download_to_file(byte_stream.decode("utf-8") )
         byte_stream.seek(0)
 
         df = pandas.read_csv(byte_stream)
