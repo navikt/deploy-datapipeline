@@ -7,6 +7,7 @@ import pandas
 import logging
 from google.cloud import storage
 import gcsfs
+from io import StringIO
 
 
 class DeployDataPakke:
@@ -75,15 +76,15 @@ class DeployDataPakke:
         dp.add_view(spec=pio.to_json(view), spec_type="plotly", name=name, title=name)
 
     def create_dataframe(self, file_uri):
-        fs = gcsfs.GCSFileSystem(project=self.PROJECT)
+        #fs = gcsfs.GCSFileSystem(project=self.PROJECT)
 
-        with fs.open(self.BUCKET_NAME + "/" + file_uri) as f:
-            df = pandas.read_csv(f)
+        #with fs.open(self.BUCKET_NAME + "/" + file_uri) as f:
+        #    df = pandas.read_csv(f)
 
-        #client = storage.Client()
-        #bucket = client.get_bucket(self.BUCKET_NAME)
-        #blob = bucket.get_blob(file_uri)
-        # data = blob.download_as_text()
+        client = storage.Client()
+        bucket = client.get_bucket(self.BUCKET_NAME)
+        blob = bucket.get_blob(file_uri)
+        data = blob.download_as_text()
 
         # df = pandas.read_csv("gs://" + self.BUCKET_NAME + "/" + file_uri)
         # df = pandas.DataFrame()
@@ -95,6 +96,7 @@ class DeployDataPakke:
         #byte_stream.seek(0)
 
         #df = pandas.read_csv(byte_stream)
+        df = pandas.read_csv(StringIO(data))
 
         logging.info("head: " + df.head(5))
 
