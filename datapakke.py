@@ -80,8 +80,8 @@ class DeployDataPakke:
         blob = bucket.get_blob(file_uri)
         data = blob.download_as_text()
 
-        #df = pandas.read_csv("gs://" + self.BUCKET_NAME + "/" + file_uri)
-        #df = pandas.DataFrame()
+        # df = pandas.read_csv("gs://" + self.BUCKET_NAME + "/" + file_uri)
+        # df = pandas.DataFrame()
 
         logging.info("read fil from bucket")
 
@@ -90,6 +90,8 @@ class DeployDataPakke:
         byte_stream.seek(0)
 
         df = pandas.read_csv(byte_stream)
+
+        logging.info("head: " + df.head(5))
 
         logging.info("extrated dataframe")
 
