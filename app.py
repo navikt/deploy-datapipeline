@@ -17,9 +17,11 @@ def isAlive():
 
 
 def run():
+    #produkt = DeployDataProduct()
+    pakke = DeployDataPakke()
     # address = DeployDataProduct.run()
     address = "gs://deployments-vera/2021-03-11-deploys-vera.csv"
-    DeployDataPakke.publiser_datapakke(address)
+    pakke.publiser_datapakke(address)
 
 
 if __name__ == "__main__":
