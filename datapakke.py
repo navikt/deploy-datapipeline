@@ -38,6 +38,8 @@ class DeployDataPakke:
         self.add_fig(dp, self.deloys_pr_unique_apps(df), "unike applikasjoner deployet pr uke")
         self.add_fig(dp, self.deploys_pr_app_pr_week(df), "gjennomsnittlig deploys pr app pr uke")
         self.add_fig(dp, self.lifespan(df), "gjennomsnittlig tid mellom deploys av samme applikasjon pr år")
+        logging.info("created data package")
+
         return dp
 
     def create_metadata(self, titel, description, forfatter, forfatter_epost):
@@ -80,11 +82,12 @@ class DeployDataPakke:
         #df = pandas.read_csv("gs://" + self.BUCKET_NAME + "/" + file_uri)
         #df = pandas.DataFrame()
 
+        logging.info("read fil from bucket")
+
+
         df = pandas.read_csv(data)
 
         logging.info("extrated dataframe")
-        #logging.info("head: " + df.head())
-        #logging.info(f"len: {len(df)}")
 
         df = df[df['application'] != 'nais-deploy-canary']
         df['dato'] = df['deployed_timestamp'].dt.date
