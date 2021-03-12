@@ -83,7 +83,7 @@ class DeployDataPakke:
 
         client = storage.Client()
         bucket = client.get_bucket(self.BUCKET_NAME)
-        blob = bucket.get_blob(file_uri)
+        blob = bucket.get_blob('Mar-11-2021-deploys-vera.csv')
         data = blob.download_as_text()
 
         # df = pandas.read_csv("gs://" + self.BUCKET_NAME + "/" + file_uri)

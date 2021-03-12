@@ -8,17 +8,6 @@ env:
   "IMAGE": docker.pkg.github.com/${{ github.repository }}/deploy-datapipeline:${{ github.sha }}
 
 jobs:
-  bigquery:
-    name: "bigquery setup"
-    runs-on: "ubuntu-latest"
-    steps:
-      - uses: "actions/checkout@v2"
-      - name: "Setup bigquery"
-        uses: "nais/deploy/actions/deploy@v1"
-        env:
-          "APIKEY": "${{ secrets.NAIS_DEPLOY_APIKEY }}"
-          "CLUSTER": "prod-gcp"
-          "RESOURCE": "bigquery.yaml"
   build:
     name: "build"
     runs-on: "ubuntu-latest"
