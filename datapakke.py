@@ -8,6 +8,7 @@ import logging
 from google.cloud import storage
 import gcsfs
 from io import StringIO
+import time
 
 
 class DeployDataPakke:
@@ -21,6 +22,9 @@ class DeployDataPakke:
         os.environ["DATAVERK_API_ENDPOINT"] = "https://data.intern.nav.no/api"
         os.environ["DATAVERK_BUCKET_ENDPOINT"] = "https://dv-api-intern.prod-gcp.nais.io/storage"
         os.environ["DATAVERK_ES_HOST"] = "https://dv-api-intern.prod-gcp.nais.io/index/write/dcat"
+
+        # Wait for istio
+        time.sleep(60)
 
         dp = self.lag_datapakke(file_uri)
         dv = dataverk.Client()
@@ -85,6 +89,8 @@ class DeployDataPakke:
         bucket = client.get_bucket(self.BUCKET_NAME)
         blob = bucket.get_blob('Mar-11-2021-deploys-vera.csv')
         data = blob.download_as_text()
+
+        logging.info(f'first 50 chars of blob: {data[0:50]}')
 
         # df = pandas.read_csv("gs://" + self.BUCKET_NAME + "/" + file_uri)
         # df = pandas.DataFrame()
