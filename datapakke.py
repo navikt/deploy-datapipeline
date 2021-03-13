@@ -103,7 +103,7 @@ class DeployDataPakke:
         df = pandas.read_csv(StringIO(data))
         logging.info(f'first 50 chars of blob: {data[0:50]}')
         logging.info(f'what does stringio do? {type(StringIO(data))}')
-        logging.info(f'what is this dataframe? {df[0]}')
+        logging.info(f'what is this dataframe? {df.loc[1]}')
 
         logging.info("extrated dataframe")
 
