@@ -90,8 +90,6 @@ class DeployDataPakke:
         blob = bucket.get_blob('Mar-11-2021-deploys-vera.csv')
         data = blob.download_as_text()
 
-        logging.info(f'first 50 chars of blob: {data[0:50]}')
-
         # df = pandas.read_csv("gs://" + self.BUCKET_NAME + "/" + file_uri)
         # df = pandas.DataFrame()
 
@@ -103,8 +101,9 @@ class DeployDataPakke:
 
         #df = pandas.read_csv(byte_stream)
         df = pandas.read_csv(StringIO(data))
-
-        logging.info("head: " + df.head(5))
+        logging.info(f'first 50 chars of blob: {data[0:50]}')
+        logging.info(f'what does stringio do? {type(StringIO(data))}')
+        logging.info(f'what is this dataframe? {df[0]}')
 
         logging.info("extrated dataframe")
 
