@@ -6,7 +6,6 @@ import os
 import pandas
 import logging
 from google.cloud import storage
-import gcsfs
 from io import StringIO
 import time
 
@@ -80,34 +79,25 @@ class DeployDataPakke:
         dp.add_view(spec=pio.to_json(view), spec_type="plotly", name=name, title=name)
 
     def create_dataframe(self, file_uri):
-        #fs = gcsfs.GCSFileSystem(project=self.PROJECT)
 
-        #with fs.open(self.BUCKET_NAME + "/" + file_uri) as f:
-        #    df = pandas.read_csv(f)
-
+        logging.info('initialize google storage client and access data product...')
         client = storage.Client()
         bucket = client.get_bucket(self.BUCKET_NAME)
         blob = bucket.get_blob('Mar-11-2021-deploys-vera.csv')
         data = blob.download_as_text()
 
-        # df = pandas.read_csv("gs://" + self.BUCKET_NAME + "/" + file_uri)
-        # df = pandas.DataFrame()
-
-        logging.info("read fil from bucket")
-
-        #byte_stream = BytesIO()
-        #blob.dow(byte_stream.decode("utf-8") )
-        #byte_stream.seek(0)
-
-        #df = pandas.read_csv(byte_stream)
+        logging.info("initialize dataframe from data product...")
         df = pandas.read_csv(StringIO(data))
-        logging.info(f'first 50 chars of blob: {data[0:50]}')
-        logging.info(f'what does stringio do? {type(StringIO(data))}')
-        logging.info(f'what is this dataframe? {df.loc[1]}')
+        logging.info(f'{len(df)} rows loaded into dataframe')
 
-        logging.info("extrated dataframe")
+        logging.info("correct data types (from string conversion)...")
+        df['deployed_timestamp'] = pandas.to_datetime(df['deployed_timestamp'], format='%Y-%m-%d %H:%M:%S')
+        df['replaced_timestamp'] = pandas.to_datetime(df['replaced_timestamp'], format='%Y-%m-%d %H:%M:%S')
 
+        logging.info("filter out nais-deploy-canary...")
         df = df[df['application'] != 'nais-deploy-canary']
+
+        logging.info("derive relevant date columns...")
         df['dato'] = df['deployed_timestamp'].dt.date
         df['ukenr'] = df['deployed_timestamp'].dt.isocalendar().week.astype('str')
         df['ukenr'] = df['ukenr'].apply( lambda x: x.zfill(2))
@@ -115,6 +105,8 @@ class DeployDataPakke:
         df['år'] = df['deployed_timestamp'].dt.isocalendar().year
         df['app'] = df['application']
         df['lifetime'] = (df['replaced_timestamp'] - df['deployed_timestamp']).astype('timedelta64[s]')
+        logging.info(f'final dataframe with {len(df)} rows ready')
+
         return df
 
     def app_pr_year(self, df):
