@@ -32,26 +32,33 @@ class DeployDataPakke:
         dv.publish(dp)
 
     def lag_datapakke(self, file_uri):
-        metadata = self.create_metadata(titel='Deployment av applikasjon i NAV',
-                                        description='Viser antall deploys av applikasjoner i NAV siden 2009.',
+        metadata = self.create_metadata(title='Antall deployments av applikasjoner i NAV',
+                                        description='''Nedbryting av antall deploys av applikasjoner i NAV siden 2009. 
+                                        <br />Med "deploy" menes her endringer i en applikasjon som er satt i produksjon.
+                                        <br />Med "applikasjon" menes her programvare som er utviklet i eller for NAV av utviklere som jobber i eller for NAV. Dette kan være både interne verktøy og tjenester som inngår i selvbetjeningsløsningene på nav.no.
+                                        <br /><br />Merk at i datasettet er deploys av plattforminterne applikasjoner som kun tester om deploymekanismene fungerer vasket bort da disse ville utgjort et betydelig antall deploys, men representerer "fiktive" deployhendelser.''',
                                         forfatter='Gøran Berntsen', forfatter_epost='goran.berntsen@nav.no')
 
         dp = dataverk.Datapackage(metadata)
         df = self.create_dataframe(file_uri)
-        for år, view in self.app_pr_year(df).items():
-            self.add_fig(dp, view, "Mest deployet apps i {}".format(str(år)))
 
-        self.add_fig(dp, self.deploys_pr_week(df), "deploys per uke")
-        self.add_fig(dp, self.deloys_pr_unique_apps(df), "unike applikasjoner deployet pr uke")
-        self.add_fig(dp, self.deploys_pr_app_pr_week(df), "gjennomsnittlig deploys pr app pr uke")
-        self.add_fig(dp, self.lifespan(df), "gjennomsnittlig tid mellom deploys av samme applikasjon pr år")
+        self.add_fig(dp, self.weekly_deploys_pr_year(df), "Gjennomsnittlig antall deploys hver uke per år (alle applikasjoner)")
+
+        for år, view in self.app_pr_year(df).items():
+            self.add_fig(dp, view, "Topp 5 deployet applikasjoner i {}".format(str(år)))
+
+        self.add_fig(dp, self.deploys_pr_week(df), "Antall deploys per uke (alle applikasjoner)")
+        self.add_fig(dp, self.deloys_pr_unique_apps(df), "Antall unike applikasjoner deployet per uke siste 5 år")
+        self.add_fig(dp, self.deploys_pr_app_pr_week(df), "Gjennomsnittlig antall deploys per applikasjon per uke siste 5 år")
+        self.add_fig(dp, self.lifespan(df), "Gjennomsnittlig tid mellom deploys av samme applikasjon per år")
         logging.info("created data package")
 
         return dp
 
-    def create_metadata(self, titel, description, forfatter, forfatter_epost):
-        return {'title': titel,
+    def create_metadata(self, title, description, forfatter, forfatter_epost):
+        return {'title': title,
                 'description': description,
+                'id': 'e1556a04a484bbe06dda2f6b874f3dc1',
                 'readme': '',
                 'accessRights': 'Open',
                 'issued': dt.datetime.now().isoformat(),
@@ -114,36 +121,36 @@ class DeployDataPakke:
         for år in df['år'].unique():
             apps = df[df['år'] == år].groupby('app').size().reset_index(name='antall').sort_values('antall',
                                                                                                    ascending=False)
-            fig = px.bar(apps.head(5), x='app', y='antall', title=str(år))
+            fig = px.bar(apps.head(5), x='app', y='antall', title=f'Topp 5 deployet applikasjoner i {str(år)}')
             figs[år] = fig
         return figs
 
     def deploys_pr_week(self, df):
         uker = df.groupby(['uke']).size().reset_index(name='antall').sort_values('uke')
-        fig = px.bar(uker.tail(5 * 52), x='uke', y='antall', title='Deploys per uke siste 5 år')
+        fig = px.bar(uker.tail(5 * 52), x='uke', y='antall', title='Antall deploys per uke siste 5 år (alle applikasjoner)')
         fig.update_xaxes(type='category')
         return fig
 
-    def deploys_pr_week(self, df):
+    def weekly_deploys_pr_year(self, df):
         år = df.groupby(['uke', 'år']).size().reset_index(name='antall') \
             .groupby('år').agg(snitt_deploys_per_uke=('antall', 'mean')).reset_index()
         år['snitt_deploys_per_uke'] = år['snitt_deploys_per_uke'].round(0)
-        fig = px.bar(år, x='år', y='snitt_deploys_per_uke', title='Gjennomsnittlig deploys per uke')
+        fig = px.bar(år, x='år', y='snitt_deploys_per_uke', title='Gjennomsnittlig antall deploys hver uke per år (alle applikasjoner)')
         fig.update_xaxes(type='category')
         return fig
 
     def deloys_pr_unique_apps(self, df):
         uke_app = df.groupby(['uke', 'år', 'application']).size().reset_index(name='antall').sort_values('uke')
         uke_app = uke_app.groupby(['uke', 'år']).size().reset_index(name='antall_apps').sort_values('uke')
-        fig = px.bar(uke_app, x='uke', y='antall_apps', title='Antall unike applikasjoner deployet per uke')
+        fig = px.bar(uke_app.tail(5*52), x='uke', y='antall_apps', title='Antall unike applikasjoner deployet per uke siste 5 år')
         fig.update_xaxes(type='category')
         return fig
 
     def deploys_pr_app_pr_week(self, df):
         uke_app_snitt = df.groupby(['uke', 'år', 'application']).size().reset_index(name='antall').sort_values('uke')
         uke_app_snitt = uke_app_snitt.groupby(['uke', 'år']).agg(snitt_deploys=('antall', 'mean')).reset_index()
-        fig = px.bar(uke_app_snitt, x='uke', y='snitt_deploys',
-                     title='Gjennomsnitt antall deploys per applikasjon per uke')
+        fig = px.bar(uke_app_snitt.tail(5*52), x='uke', y='snitt_deploys',
+                     title='Gjennomsnittlig antall deploys per applikasjon per uke siste 5 år')
         fig.update_xaxes(type='category')
         return fig
 
