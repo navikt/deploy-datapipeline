@@ -33,10 +33,11 @@ class DeployDataPakke:
 
     def lag_datapakke(self, file_uri):
         metadata = self.create_metadata(title='Antall deployments av applikasjoner i NAV',
-                                        description='''Nedbryting av antall deploys av applikasjoner i NAV siden 2009. 
-                                        <br />Med "deploy" menes her endringer i en applikasjon som er satt i produksjon.
-                                        <br />Med "applikasjon" menes her programvare som er utviklet i eller for NAV av utviklere som jobber i eller for NAV. Dette kan være både interne verktøy og tjenester som inngår i selvbetjeningsløsningene på nav.no.
-                                        <br /><br />Merk at i datasettet er deploys av plattforminterne applikasjoner som kun tester om deploymekanismene fungerer vasket bort da disse ville utgjort et betydelig antall deploys, men representerer "fiktive" deployhendelser.''',
+                                        description='''Nedbryting av antall deploys av applikasjoner i NAV siden 2009.''',
+                                        readme='''Nedbryting av antall deploys av applikasjoner i NAV siden 2009. 
+                                        Med "deploy" menes her endringer i en applikasjon som er satt i produksjon.
+                                        Med "applikasjon" menes her programvare som er utviklet i eller for NAV av utviklere som jobber i eller for NAV. Dette kan være både interne verktøy og tjenester som inngår i selvbetjeningsløsningene på nav.no.
+                                        Merk at i datasettet er deploys av plattforminterne applikasjoner som kun tester om deploymekanismene fungerer vasket bort da disse ville utgjort et betydelig antall deploys, men representerer "fiktive" deployhendelser.''',
                                         forfatter='Gøran Berntsen', forfatter_epost='goran.berntsen@nav.no')
 
         dp = dataverk.Datapackage(metadata)
@@ -47,7 +48,7 @@ class DeployDataPakke:
         for år, view in self.app_pr_year(df).items():
             self.add_fig(dp, view, "Topp 5 deployet applikasjoner i {}".format(str(år)))
 
-        self.add_fig(dp, self.deploys_pr_week(df), "Antall deploys per uke (alle applikasjoner)")
+        self.add_fig(dp, self.deploys_pr_week(df), "Antall deploys per uke (alle applikasjoner) siste 5 år")
         self.add_fig(dp, self.deloys_pr_unique_apps(df), "Antall unike applikasjoner deployet per uke siste 5 år")
         self.add_fig(dp, self.deploys_pr_app_pr_week(df), "Gjennomsnittlig antall deploys per applikasjon per uke siste 5 år")
         self.add_fig(dp, self.lifespan(df), "Gjennomsnittlig tid mellom deploys av samme applikasjon per år")
