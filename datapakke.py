@@ -19,10 +19,10 @@ class DeployDataPakke:
 
     def publiser_datapakke(self, file_uri):
         os.environ["DATAVERK_API_ENDPOINT"] = "https://data.intern.nav.no/api"
-        os.environ["DATAVERK_BUCKET_ENDPOINT"] = "https://dv-api-intern.prod-gcp.nais.io/storage"
-        #os.environ["DATAVERK_BUCKET_ENDPOINT"] = "http://dv-w-api-intern.dataplattform.svc.cluster.local/storage"
-        os.environ["DATAVERK_ES_HOST"] = "https://dv-api-intern.prod-gcp.nais.io/index/write/dcat"
-        #os.environ["DATAVERK_ES_HOST"] = "http://dv-w-api-intern.dataplattform.svc.cluster.local/index/write/dcat"
+        #os.environ["DATAVERK_BUCKET_ENDPOINT"] = "https://dv-api-intern.prod-gcp.nais.io/storage"
+        os.environ["DATAVERK_BUCKET_ENDPOINT"] = "https://dv-api-ekstern.prod-gcp.nais.io/storage"
+        #os.environ["DATAVERK_ES_HOST"] = "https://dv-api-intern.prod-gcp.nais.io/index/write/dcat"
+        os.environ["DATAVERK_ES_HOST"] = "https://dv-api-ekstern.prod-gcp.nais.io/index/write/dcat"
 
         # Wait for istio
         time.sleep(60)
@@ -64,16 +64,13 @@ class DeployDataPakke:
                 'contactpoint': {'name': forfatter, 'email': forfatter_epost},
                 'license': {'name': 'CC BY 4.0', 'url': 'http://creativecommons.org/licenses/by/4.0/deed.no'},
                 'keywords': [],
-                'spatial': '',
                 'theme': [],
                 'type': 'datapackage',
                 'format': 'datapackage',
                 'category': 'category',
                 'provenance': 'NAV',
-                'repo': '',
-                'notebook': '',
+                'repo': 'https://github.com/navikt/deploy-datapipeline',
                 'store': 'nais',
-                'project': 'odata',
                 'bucket': 'nav-opendata'
                 }
 
