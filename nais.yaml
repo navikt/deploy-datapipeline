@@ -35,6 +35,7 @@ spec:
       external:
         - host: vera.nais.oera.no
         - host: bigquery.googleapis.com
+        - host: dv-api-intern.prod-gcp.nais.io
       rules:
         - application: dv-w-api-intern
           namespace: dataplattform
