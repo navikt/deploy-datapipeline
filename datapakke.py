@@ -129,6 +129,7 @@ class DeployDataPakke:
         uker = df.groupby(['uke']).size().reset_index(name='antall').sort_values('uke')
         fig = px.bar(uker.tail(5 * 52), x='uke', y='antall', title='Antall deploys per uke siste 5 år (alle applikasjoner)')
         fig.update_xaxes(type='category')
+        fig.update_layout(hovermode="x unified")
         return fig
 
     def weekly_deploys_pr_year(self, df):
@@ -144,6 +145,7 @@ class DeployDataPakke:
         uke_app = uke_app.groupby(['uke', 'år']).size().reset_index(name='antall_apps').sort_values('uke')
         fig = px.bar(uke_app.tail(5*52), x='uke', y='antall_apps', title='Antall unike applikasjoner deployet per uke siste 5 år')
         fig.update_xaxes(type='category')
+        fig.update_layout(hovermode="x unified")
         return fig
 
     def deploys_pr_app_pr_week(self, df):
@@ -152,6 +154,7 @@ class DeployDataPakke:
         fig = px.bar(uke_app_snitt.tail(5*52), x='uke', y='snitt_deploys',
                      title='Gjennomsnittlig antall deploys per applikasjon per uke siste 5 år')
         fig.update_xaxes(type='category')
+        fig.update_layout(hovermode="x unified")
         return fig
 
     def display_time(self, seconds, granularity=2):
