@@ -56,11 +56,11 @@ class DeployDataPakke:
 
         return dp
 
-    def create_metadata(self, title, description, forfatter, forfatter_epost):
+    def create_metadata(self, title, description, readme, forfatter, forfatter_epost):
         return {'title': title,
                 'description': description,
                 'id': 'e1556a04a484bbe06dda2f6b874f3dc1',
-                'readme': '',
+                'readme': readme,
                 'accessRights': 'Open',
                 'issued': dt.datetime.now().isoformat(),
                 'modified': dt.datetime.now().isoformat(),
