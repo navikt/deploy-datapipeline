@@ -19,7 +19,8 @@ class DeployDataPakke:
 
     def publiser_datapakke(self, file_uri):
         os.environ["DATAVERK_API_ENDPOINT"] = "https://data.intern.nav.no/api"
-        os.environ["DATAVERK_BUCKET_ENDPOINT"] = "https://dv-api-intern.prod-gcp.nais.io/storage"
+        #os.environ["DATAVERK_BUCKET_ENDPOINT"] = "https://dv-api-intern.prod-gcp.nais.io/storage"
+        os.environ["DATAVERK_BUCKET_ENDPOINT"] = "http://dv-w-api-intern.dataplattform.svc.cluster.local/storage"
         os.environ["DATAVERK_ES_HOST"] = "https://dv-api-intern.prod-gcp.nais.io/index/write/dcat"
 
         # Wait for istio
