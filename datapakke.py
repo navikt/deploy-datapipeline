@@ -33,10 +33,10 @@ class DeployDataPakke:
 
     def lag_datapakke(self, file_uri):
         metadata = self.create_metadata(title='Antall deployments av applikasjoner i NAV',
-                                        description='''Nedbryting av antall deploys av applikasjoner i NAV siden 2009. 
+                                        description='''Nedbryting av antall deploys av applikasjoner til prod i NAV siden 2009. 
                                         Med "deploy" menes her endringer i en applikasjon som er satt i produksjon.
                                         Med "applikasjon" menes her programvare som er utviklet i eller for NAV av utviklere som jobber i eller for NAV. Dette kan være både interne verktøy og tjenester som inngår i selvbetjeningsløsningene på nav.no.
-                                        Merk at i datasettet er deploys av plattforminterne applikasjoner som kun tester om deploymekanismene fungerer vasket bort da disse ville utgjort et betydelig antall deploys, men representerer "fiktive" deployhendelser.''',
+                                        Merk at datasettet kun inkluderer deployments til produksjon, altså at deployments til dev- og testmiljøer er ekskludert. Merk også at deploys av plattforminterne applikasjoner som kun tester om deploymekanismene fungerer er vasket bort da disse ville utgjort et betydelig antall deploys, men representerer "fiktive" deployhendelser.''',
                                         forfatter='Gøran Berntsen', forfatter_epost='goran.berntsen@nav.no')
 
         dp = dataverk.Datapackage(metadata)
