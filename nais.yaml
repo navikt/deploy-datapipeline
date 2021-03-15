@@ -35,6 +35,9 @@ spec:
       external:
         - host: vera.nais.oera.no
         - host: bigquery.googleapis.com
+      rules:
+        - application: dv-w-api-intern
+          namespace: dataplattform
   gcp:
     buckets:
       - name: deployments-vera
