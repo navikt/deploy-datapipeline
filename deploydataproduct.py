@@ -4,7 +4,6 @@ import time
 import requests
 import logging
 import pandas
-import uuid
 from io import StringIO
 
 
@@ -58,5 +57,5 @@ class DeployDataProduct():
             'uri': uri
         }
 
-        response = requests.put(DATA_CATALOG_API, metadata)
+        response = requests.put(DATA_CATALOG_API, json=metadata)
         logger.info(f'Putting metadata in data catalog: {response.status_code} - {response.content}')
