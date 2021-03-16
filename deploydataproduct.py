@@ -4,6 +4,7 @@ import time
 import requests
 import logging
 import pandas
+import uuid
 from io import StringIO
 
 
@@ -34,7 +35,8 @@ class DeployDataProduct():
     def write_to_bucket(self, parquet_filename):
         client = storage.Client()
         bucket = client.get_bucket(BUCKET_NAME)
-        bucket.blob(parquet_filename).upload_from_file(parquet_filename)
+        with open(parquet_filename) as file:
+            bucket.blob(parquet_filename).upload_from_file(file)
         return "gs://" + BUCKET_NAME + "/" + parquet_filename
 
     def transform(self, csv_text, parquet_filename):
@@ -42,3 +44,14 @@ class DeployDataProduct():
         df['deployed_timestamp'] = pandas.to_datetime(df['deployed_timestamp'], format='%Y-%m-%d %H:%M:%S')
         df['replaced_timestamp'] = pandas.to_datetime(df['replaced_timestamp'], format='%Y-%m-%d %H:%M:%S')
         df.to_parquet(parquet_filename)
+
+    def metadata(self, uri):
+        metadata = {
+            'id': uuid.uuid4(),
+            'title': 'Deploys til prod',
+            'description': 'Alle deploys av applikasjoner til prod siden 2009',
+            'type': 'egg',
+            'uri': uri
+        }
+
+        return metadata
