@@ -5,6 +5,7 @@ import requests
 import logging
 import pandas
 from io import StringIO
+import pytz
 
 
 BUCKET_NAME = "deployments-vera"
@@ -49,12 +50,14 @@ class DeployDataProduct():
         df.to_parquet(parquet_filename)
 
     def post_metadata(self, uri):
+        now = datetime.datetime.now(pytz.timezone('Europe/Oslo')).isoformat()
         metadata = {
             'id': DATA_PRODUCT_ID,
             'title': 'Deploys til prod',
             'description': 'Alle deploys av applikasjoner til prod siden 2009',
             'type': 'egg',
-            'uri': uri
+            'uri': uri,
+            'modified': now
         }
 
         response = requests.put(DATA_CATALOG_API, json=metadata)
