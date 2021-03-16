@@ -40,7 +40,7 @@ class DeployDataProduct():
         bucket = client.get_bucket(BUCKET_NAME)
         with open(parquet_filename, 'rb') as file:
             bucket.blob(parquet_filename).upload_from_file(file)
-        return f'gs://{BUCKET_NAME}/{parquet_filename}
+        return f'gs://{BUCKET_NAME}/{parquet_filename}'
 
     def transform(self, csv_text, parquet_filename):
         df = pandas.read_csv(StringIO(csv_text))
