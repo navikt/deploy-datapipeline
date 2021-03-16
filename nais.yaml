@@ -37,9 +37,7 @@ spec:
         - host: bigquery.googleapis.com
         - host: dv-api-intern.prod-gcp.nais.io
         - host: dv-api-ekstern.prod-gcp.nais.io
-      rules:
-        - application: dv-w-api-intern
-          namespace: dataplattform
+        - host: datakatalogen.intern.nav.no
   gcp:
     buckets:
       - name: deployments-vera

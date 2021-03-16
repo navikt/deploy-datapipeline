@@ -10,6 +10,7 @@ from io import StringIO
 
 BUCKET_NAME = "deployments-vera"
 PROJECT = "nais-analyse-prod-2dcc"
+DATA_CATALOG_API = "https://datakatalogen.intern.nav.no/index/write"
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
@@ -24,7 +25,8 @@ class DeployDataProduct():
         output_filename = datetime.date.today().strftime("%Y-%m-%d") + "-deploys-vera.parquet"
         csv_text = self.get_deploydata_from_vera()
         self.transform(csv_text, output_filename)
-        self.write_to_bucket(output_filename)
+        uri = self.write_to_bucket(output_filename)
+        self.post_metadata(uri)
         return output_filename
 
     def get_deploydata_from_vera(self):
@@ -38,7 +40,7 @@ class DeployDataProduct():
         bucket = client.get_bucket(BUCKET_NAME)
         with open(parquet_filename, 'rb') as file:
             bucket.blob(parquet_filename).upload_from_file(file)
-        return parquet_filename
+        return f'gs://{BUCKET_NAME}/{parquet_filename}
 
     def transform(self, csv_text, parquet_filename):
         df = pandas.read_csv(StringIO(csv_text))
@@ -46,7 +48,7 @@ class DeployDataProduct():
         df['replaced_timestamp'] = pandas.to_datetime(df['replaced_timestamp'], format='%Y-%m-%d %H:%M:%S')
         df.to_parquet(parquet_filename)
 
-    def metadata(self, uri):
+    def post_metadata(self, uri):
         metadata = {
             'id': uuid.uuid4(),
             'title': 'Deploys til prod',
@@ -55,4 +57,5 @@ class DeployDataProduct():
             'uri': uri
         }
 
-        return metadata
+        request = requests.put(DATA_CATALOG_API, metadata)
+        logger.info(f'Putting metadata in data catalog: {request.status_code}')
