@@ -37,7 +37,7 @@ spec:
         - host: bigquery.googleapis.com
         - host: dv-api-intern.prod-gcp.nais.io
         - host: dv-api-ekstern.prod-gcp.nais.io
-        - host: datakatalogen.intern.nav.no
+        - host: datakatalog-api.intern.nav.no
   gcp:
     buckets:
       - name: deployments-vera

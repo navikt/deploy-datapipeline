@@ -10,7 +10,7 @@ from io import StringIO
 
 BUCKET_NAME = "deployments-vera"
 PROJECT = "nais-analyse-prod-2dcc"
-DATA_CATALOG_API = "https://datakatalogen.intern.nav.no/index/write"
+DATA_CATALOG_API = "https://datakatalog-api.intern.nav.no/v1/index"
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
