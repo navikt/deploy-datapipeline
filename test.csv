@@ -1,0 +1,3 @@
+environment,application,version,deployer,deployed_timestamp,replaced_timestamp,environmentClass,id
+p,deploy-datapipeline,6b167a5d9370ffe2e2c7a512d1cf9a73540f76ca,naiserator (nais-analyse),2021-03-11 10:44:43,2021-03-11 10:57:58,p,6049f49bb17641adb64eaa46
+p,syfosoknad,2021.03.11-11.27-c033b815,naiserator (flex),2021-03-11 10:36:31,2021-03-11 11:04:17,p,6049f2af2bd3c207cd03ee7a

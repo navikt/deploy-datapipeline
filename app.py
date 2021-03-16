@@ -2,7 +2,6 @@ from flask import Flask
 import threading
 from deploydataproduct import DeployDataProduct
 from datapakke import DeployDataPakke
-import time
 
 app = Flask(__name__)
 
@@ -18,11 +17,12 @@ def isAlive():
 
 
 def run():
-    time.sleep(10)
-    #produkt = DeployDataProduct()
+
+    produkt = DeployDataProduct()
+
+    address = produkt.run()
+
     pakke = DeployDataPakke()
-    # address = DeployDataProduct.run()
-    address = "2021-03-11-deploys-vera.csv"
     pakke.publiser_datapakke(address)
 
 

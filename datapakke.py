@@ -7,7 +7,6 @@ import pandas
 import logging
 from google.cloud import storage
 from io import StringIO
-import time
 
 
 class DeployDataPakke:
@@ -19,13 +18,9 @@ class DeployDataPakke:
 
     def publiser_datapakke(self, file_uri):
         os.environ["DATAVERK_API_ENDPOINT"] = "https://data.nav.no/api"
-        #os.environ["DATAVERK_BUCKET_ENDPOINT"] = "https://dv-api-intern.prod-gcp.nais.io/storage"
         os.environ["DATAVERK_BUCKET_ENDPOINT"] = "https://dv-api-ekstern.prod-gcp.nais.io/storage"
-        #os.environ["DATAVERK_ES_HOST"] = "https://dv-api-intern.prod-gcp.nais.io/index/write/dcat"
         os.environ["DATAVERK_ES_HOST"] = "https://dv-api-ekstern.prod-gcp.nais.io/index/write/dcat"
 
-        # Wait for istio
-        time.sleep(60)
 
         dp = self.lag_datapakke(file_uri)
         dv = dataverk.Client()
