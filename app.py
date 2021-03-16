@@ -20,10 +20,10 @@ def run():
 
     produkt = DeployDataProduct()
 
-    address = produkt.run()
+    dataproduct_filename = produkt.run()
 
     pakke = DeployDataPakke()
-    pakke.publiser_datapakke(address)
+    pakke.publiser_datapakke(dataproduct_filename)
 
 
 if __name__ == "__main__":

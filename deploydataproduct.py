@@ -24,7 +24,8 @@ class DeployDataProduct():
         output_filename = datetime.date.today().strftime("%Y-%m-%d") + "-deploys-vera.parquet"
         csv_text = self.get_deploydata_from_vera()
         self.transform(csv_text, output_filename)
-        return self.write_to_bucket(output_filename)
+        self.write_to_bucket(output_filename)
+        return output_filename
 
     def get_deploydata_from_vera(self):
         start = time.time()
@@ -37,7 +38,7 @@ class DeployDataProduct():
         bucket = client.get_bucket(BUCKET_NAME)
         with open(parquet_filename, 'rb') as file:
             bucket.blob(parquet_filename).upload_from_file(file)
-        return "gs://" + BUCKET_NAME + "/" + parquet_filename
+        return parquet_filename
 
     def transform(self, csv_text, parquet_filename):
         df = pandas.read_csv(StringIO(csv_text))

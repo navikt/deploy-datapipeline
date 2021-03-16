@@ -6,7 +6,6 @@ import os
 import pandas
 import logging
 from google.cloud import storage
-from io import StringIO
 
 
 class DeployDataPakke:
@@ -16,17 +15,17 @@ class DeployDataPakke:
     BUCKET_NAME = "deployments-vera"
     PROJECT = "nais-analyse-prod-2dcc"
 
-    def publiser_datapakke(self, file_uri):
+    def publiser_datapakke(self, filename):
         os.environ["DATAVERK_API_ENDPOINT"] = "https://data.nav.no/api"
         os.environ["DATAVERK_BUCKET_ENDPOINT"] = "https://dv-api-ekstern.prod-gcp.nais.io/storage"
         os.environ["DATAVERK_ES_HOST"] = "https://dv-api-ekstern.prod-gcp.nais.io/index/write/dcat"
 
 
-        dp = self.lag_datapakke(file_uri)
+        dp = self.lag_datapakke(filename)
         dv = dataverk.Client()
         dv.publish(dp)
 
-    def lag_datapakke(self, file_uri):
+    def lag_datapakke(self, filename):
         metadata = self.create_metadata(title='Antall deployments av applikasjoner i NAV',
                                         description='''Nedbryting av antall deploys av applikasjoner til prod i NAV siden 2009. 
                                         Med "deploy" menes her endringer i en applikasjon som er satt i produksjon.
@@ -35,7 +34,7 @@ class DeployDataPakke:
                                         forfatter='Gøran Berntsen', forfatter_epost='goran.berntsen@nav.no')
 
         dp = dataverk.Datapackage(metadata)
-        df = self.create_dataframe(file_uri)
+        df = self.create_dataframe(filename)
 
         self.add_fig(dp, self.weekly_deploys_pr_year(df), "Gjennomsnittlig antall deploys hver uke per år (alle applikasjoner)")
 
@@ -79,21 +78,25 @@ class DeployDataPakke:
     def add_fig(self, dp, view, name):
         dp.add_view(spec=pio.to_json(view), spec_type="plotly", name=name, title=name)
 
-    def create_dataframe(self, file_uri):
+    def create_dataframe(self, filename):
 
         logging.info('initialize google storage client and access data product...')
         client = storage.Client()
         bucket = client.get_bucket(self.BUCKET_NAME)
-        blob = bucket.get_blob('Mar-11-2021-deploys-vera.csv')
-        data = blob.download_as_text()
+        #blob = bucket.get_blob('Mar-11-2021-deploys-vera.csv')
+        blob = bucket.get_blob(filename)
+        local_parquet_file = 'temp.parquet'
+        blob.download_to_file(local_parquet_file)
 
         logging.info("initialize dataframe from data product...")
-        df = pandas.read_csv(StringIO(data))
+        #df = pandas.read_csv(StringIO(data))
+        df = pandas.read_parquet(local_parquet_file)
+        os.remove(local_parquet_file)
         logging.info(f'{len(df)} rows loaded into dataframe')
 
-        logging.info("correct data types (from string conversion)...")
-        df['deployed_timestamp'] = pandas.to_datetime(df['deployed_timestamp'], format='%Y-%m-%d %H:%M:%S')
-        df['replaced_timestamp'] = pandas.to_datetime(df['replaced_timestamp'], format='%Y-%m-%d %H:%M:%S')
+        #logging.info("correct data types (from string conversion)...")
+        #df['deployed_timestamp'] = pandas.to_datetime(df['deployed_timestamp'], format='%Y-%m-%d %H:%M:%S')
+        #df['replaced_timestamp'] = pandas.to_datetime(df['replaced_timestamp'], format='%Y-%m-%d %H:%M:%S')
 
         logging.info("filter out nais-deploy-canary...")
         df = df[df['application'] != 'nais-deploy-canary']
