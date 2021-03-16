@@ -6,6 +6,7 @@ import os
 import pandas
 import logging
 from google.cloud import storage
+import pytz
 
 
 class DeployDataPakke:
@@ -19,7 +20,6 @@ class DeployDataPakke:
         os.environ["DATAVERK_API_ENDPOINT"] = "https://data.nav.no/api"
         os.environ["DATAVERK_BUCKET_ENDPOINT"] = "https://dv-api-ekstern.prod-gcp.nais.io/storage"
         os.environ["DATAVERK_ES_HOST"] = "https://dv-api-ekstern.prod-gcp.nais.io/index/write/dcat"
-
 
         dp = self.lag_datapakke(filename)
         dv = dataverk.Client()
@@ -50,16 +50,17 @@ class DeployDataPakke:
         return dp
 
     def create_metadata(self, title, description, forfatter, forfatter_epost, readme=''):
+        now = dt.datetime.now(pytz.timezone('Europe/Oslo')).isoformat()
         return {'title': title,
                 'description': description,
                 'id': 'e1556a04a484bbe06dda2f6b874f3dc1',
                 'readme': readme,
                 'accessRights': 'Open',
-                'issued': dt.datetime.now().isoformat(),
-                'modified': dt.datetime.now().isoformat(),
+                'issued': now,
+                'modified': now,
                 'language': 'Norsk',
                 'periodicity': '',
-                'temporal': {'from': f'2009-01-01', 'to': f'{dt.datetime.now().isoformat()}'},
+                'temporal': {'from': f'2009-01-01', 'to': f'{now}'},
                 'author': forfatter,
                 'publisher': {'name': 'nais', 'url': 'https://nais.io'},
                 'contactpoint': {'name': forfatter, 'email': forfatter_epost},
@@ -83,7 +84,7 @@ class DeployDataPakke:
         logging.info('initialize google storage client and access data product...')
         client = storage.Client()
         bucket = client.get_bucket(self.BUCKET_NAME)
-        #blob = bucket.get_blob('Mar-11-2021-deploys-vera.csv')
+
         blob = bucket.get_blob(filename)
         local_parquet_file = 'temp.parquet'
 
@@ -91,14 +92,10 @@ class DeployDataPakke:
             blob.download_to_file(file)
 
         logging.info("initialize dataframe from data product...")
-        #df = pandas.read_csv(StringIO(data))
+
         df = pandas.read_parquet(local_parquet_file)
         os.remove(local_parquet_file)
         logging.info(f'{len(df)} rows loaded into dataframe')
-
-        #logging.info("correct data types (from string conversion)...")
-        #df['deployed_timestamp'] = pandas.to_datetime(df['deployed_timestamp'], format='%Y-%m-%d %H:%M:%S')
-        #df['replaced_timestamp'] = pandas.to_datetime(df['replaced_timestamp'], format='%Y-%m-%d %H:%M:%S')
 
         logging.info("filter out nais-deploy-canary...")
         df = df[df['application'] != 'nais-deploy-canary']
