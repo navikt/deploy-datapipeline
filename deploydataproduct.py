@@ -11,6 +11,7 @@ from io import StringIO
 BUCKET_NAME = "deployments-vera"
 PROJECT = "nais-analyse-prod-2dcc"
 DATA_CATALOG_API = "https://datakatalog-api.intern.nav.no/v1/index"
+DATA_PRODUCT_ID = 'f55023cf-4acc-48a2-9a98-a04e4c0aea70'
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
@@ -50,12 +51,12 @@ class DeployDataProduct():
 
     def post_metadata(self, uri):
         metadata = {
-            'id': uuid.uuid4(),
+            'id': DATA_PRODUCT_ID,
             'title': 'Deploys til prod',
             'description': 'Alle deploys av applikasjoner til prod siden 2009',
             'type': 'egg',
             'uri': uri
         }
 
-        request = requests.put(DATA_CATALOG_API, metadata)
-        logger.info(f'Putting metadata in data catalog: {request.status_code}')
+        response = requests.put(DATA_CATALOG_API, metadata)
+        logger.info(f'Putting metadata in data catalog: {response.status_code} - {response.content}')
