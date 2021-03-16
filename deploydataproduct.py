@@ -35,7 +35,7 @@ class DeployDataProduct():
     def write_to_bucket(self, parquet_filename):
         client = storage.Client()
         bucket = client.get_bucket(BUCKET_NAME)
-        with open(parquet_filename) as file:
+        with open(parquet_filename, 'r') as file:
             bucket.blob(parquet_filename).upload_from_file(file)
         return "gs://" + BUCKET_NAME + "/" + parquet_filename
 
