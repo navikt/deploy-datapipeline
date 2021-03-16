@@ -86,7 +86,9 @@ class DeployDataPakke:
         #blob = bucket.get_blob('Mar-11-2021-deploys-vera.csv')
         blob = bucket.get_blob(filename)
         local_parquet_file = 'temp.parquet'
-        blob.download_to_file(local_parquet_file)
+
+        with open(local_parquet_file, 'wb') as file:
+            blob.download_to_file(file)
 
         logging.info("initialize dataframe from data product...")
         #df = pandas.read_csv(StringIO(data))
