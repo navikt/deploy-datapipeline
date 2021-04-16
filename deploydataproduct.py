@@ -34,7 +34,6 @@ class DeployDataProduct():
         start = time.time()
         response = requests.get("https://vera.nais.oera.no/api/v1/deploylog?environment=p&csv=true")
         logger.info("Get data from vera: Time: {} seconds, size {}".format(str(time.time() - start), str(len(response.content))))
-        logger.info(response.content)
         return response.text
 
     def write_to_bucket(self, parquet_filename):
