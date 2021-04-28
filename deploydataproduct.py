@@ -32,7 +32,7 @@ class DeployDataProduct():
 
     def get_deploydata_from_vera(self):
         start = time.time()
-        response = requests.get("https://vera.nais.oera.no/api/v1/deploylog?environment=p")
+        response = requests.get("https://vera.nais.oera.no/api/v1/deploylog?environment=p&csv=true&last=5y")
         logger.info("Get data from vera: Time: {} seconds, size {}".format(str(time.time() - start), str(len(response.content))))
         logger.info(response.status_code)
         return response.text
