@@ -20,8 +20,8 @@ logger = logging.getLogger(__name__)
 class DeployDataProduct():
 
     def run(self):
-        logger.info('Wait 30 seconds for Istio to get going...')
-        time.sleep(30)
+        logger.info('Wait 60 seconds for Istio to get going...')
+        time.sleep(60)
 
         output_filename = datetime.date.today().strftime("%Y-%m-%d") + "-deploys-vera.parquet"
         csv_text = self.get_deploydata_from_vera()
@@ -34,7 +34,7 @@ class DeployDataProduct():
         start = time.time()
         response = requests.get("https://vera.nais.oera.no/api/v1/deploylog?environment=p&csv=true")
         logger.info("Get data from vera: Time: {} seconds, size {}".format(str(time.time() - start), str(len(response.content))))
-        logger.info(response.text)
+        logger.info(response.status_code)
         return response.text
 
     def write_to_bucket(self, parquet_filename):
