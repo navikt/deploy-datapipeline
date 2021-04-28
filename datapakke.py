@@ -38,7 +38,7 @@ class DeployDataPakke:
 
         # Combine cached data (pre 2021) with current data
         df_archive = self.create_dataframe(self.ARCHIVED_DEPLOYS)
-        df_archive = df_archive[df_archive['year'] != 2021]
+        df_archive = df_archive[df_archive['år'] != 2021]
         df = self.create_dataframe(filename)
         df = df.append(df_archive)
 
