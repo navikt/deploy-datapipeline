@@ -14,6 +14,7 @@ class DeployDataPakke:
     logger = logging.getLogger(__name__)
 
     BUCKET_NAME = "deployments-vera"
+    ARCHIVED_DEPLOYS = "2021-04-01-deploys-vera.parquet"
     PROJECT = "nais-analyse-prod-2dcc"
 
     def publiser_datapakke(self, filename):
@@ -34,7 +35,12 @@ class DeployDataPakke:
                                         forfatter='Gøran Berntsen', forfatter_epost='goran.berntsen@nav.no')
 
         dp = dataverk.Datapackage(metadata)
+
+        # Combine cached data (pre 2021) with current data
+        df_archive = self.create_dataframe(self.ARCHIVED_DEPLOYS)
+        df_archive = df_archive[df_archive['year'] != 2021]
         df = self.create_dataframe(filename)
+        df = df.append(df_archive)
 
         self.add_fig(dp, self.weekly_deploys_pr_year(df), "Gjennomsnittlig antall deploys hver uke per år (alle applikasjoner)")
 

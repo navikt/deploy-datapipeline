@@ -23,7 +23,7 @@ class DeployDataProduct():
         logger.info('Wait 60 seconds for Istio to get going...')
         time.sleep(60)
 
-        output_filename = datetime.date.today().strftime("%Y-%m-%d") + "-deploys-vera.parquet"
+        output_filename = datetime.date.today().strftime("%Y-%m-%d") + "-deploys-vera-since-2021.parquet"
         csv_text = self.get_deploydata_from_vera()
         self.transform(csv_text, output_filename)
         uri = self.write_to_bucket(output_filename)
@@ -32,7 +32,8 @@ class DeployDataProduct():
 
     def get_deploydata_from_vera(self):
         start = time.time()
-        response = requests.get("https://vera.nais.oera.no/api/v1/deploylog?environment=p&csv=true&last=5y")
+        days_since_cutoff = (datetime.datetime.now() - datetime.date(2021, 1, 1)).days
+        response = requests.get(f"https://vera.nais.oera.no/api/v1/deploylog?environment=p&csv=true&last={days_since_cutoff}d")
         logger.info("Get data from vera: Time: {} seconds, size {}".format(str(time.time() - start), str(len(response.content))))
         logger.info(response.status_code)
         return response.text
@@ -55,7 +56,7 @@ class DeployDataProduct():
         metadata = {
             'id': DATA_PRODUCT_ID,
             'title': 'Deploys til prod',
-            'description': 'Alle deploys av applikasjoner til prod siden 2009',
+            'description': 'Alle deploys av applikasjoner til prod siden 2021',
             'type': 'egg',
             'uri': uri,
             'modified': now
