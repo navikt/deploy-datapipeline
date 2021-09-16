@@ -105,6 +105,8 @@ class DeployDataPakke:
 
         logging.info("filter out nais-deploy-canary...")
         df = df[df['application'] != 'nais-deploy-canary']
+        logging.info("filter out testapp-storage...")
+        df = df[df['application'] != 'testapp-storage']
 
         logging.info("derive relevant date columns...")
         df['dato'] = df['deployed_timestamp'].dt.date
