@@ -107,6 +107,8 @@ class DeployDataPakke:
         df = df[df['application'] != 'nais-deploy-canary']
         logging.info("filter out testapp-storage...")
         df = df[df['application'] != 'testapp-storage']
+        logging.info("filter out kafkarator-canary...")
+        df = df[df['application'] != 'kafkarator-canary']
 
         logging.info("derive relevant date columns...")
         df['dato'] = df['deployed_timestamp'].dt.date
