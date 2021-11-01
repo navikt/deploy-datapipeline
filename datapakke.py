@@ -51,6 +51,7 @@ class DeployDataPakke:
         self.add_fig(dp, self.deloys_pr_unique_apps(df), "Antall unike applikasjoner deployet per uke siste 5 år")
         self.add_fig(dp, self.deploys_pr_app_pr_week(df), "Gjennomsnittlig antall deploys per applikasjon per uke siste 5 år")
         self.add_fig(dp, self.lifespan(df), "Gjennomsnittlig tid mellom deploys av samme applikasjon per år")
+        self.add_fig(dp, self.apps_pr_deploy_frequency(df), "Antall apper per deployhyppighet")
         logging.info("created data package")
 
         return dp
@@ -115,6 +116,9 @@ class DeployDataPakke:
         df['ukenr'] = df['deployed_timestamp'].dt.isocalendar().week.astype('str')
         df['ukenr'] = df['ukenr'].apply( lambda x: x.zfill(2))
         df['uke'] = df['deployed_timestamp'].dt.isocalendar().year.astype('str') + '-' + df['ukenr']
+        df['måned'] = df['deployed_timestamp'].dt.month
+        df['måned'] = df['måned'].astype('str').apply(lambda x: x.zfill(2))
+        df['måned'] = df['deployed_timestamp'].dt.isocalendar().year.astype('str') + '-' + df['måned']
         df['år'] = df['deployed_timestamp'].dt.isocalendar().year
         df['app'] = df['application']
         df['lifetime'] = (df['replaced_timestamp'] - df['deployed_timestamp']).astype('timedelta64[s]')
@@ -164,6 +168,17 @@ class DeployDataPakke:
         fig.update_layout(hovermode="x unified")
         return fig
 
+    def apps_pr_deploy_frequency(self, df):
+        deploys_app_month = df.groupby(['app', 'måned']).size().reset_index(name='antall deploys').sort_values('antall deploys')
+        deploys_app_month['bucket'] = deploys_app_month.apply(lambda x: self.hyppighet_buckets(x['antall deploys']), axis=1)
+        apps = deploys_app_month.groupby(['bucket', 'måned']).size().reset_index(name='antall apps').sort_values('bucket')
+
+        categoryorder = apps['måned'].drop_duplicates().sort_values()
+        fig = px.bar(apps, y='antall apps', x='måned', barmode='stack', color='bucket', title='Antall apps per deployhyppighet')
+        fig.update_xaxes(type='category')
+        fig.update_layout(xaxis={'categoryorder':'array', 'categoryarray':categoryorder})
+        return fig
+
     def display_time(self, seconds, granularity=2):
         intervals = (
             ('weeks', 604800),  # 60 * 60 * 24 * 7
@@ -193,3 +208,15 @@ class DeployDataPakke:
                      title='Gjennomsnittlig tid mellom deploys for en app (i timer) per år')
         fig.update_xaxes(type='category')
         return fig
+
+    def hyppighet_buckets(antall):
+        if 1 <= antall <= 2:
+            return "a) 1-2 (\"månedlig\")"
+        elif 3 <= antall <= 6:
+            return "b) 3-6 (\"ukentlig\")"
+        elif 7 <= antall <= 14:
+            return "c) 7-14 (\"flere ganger i uka\")"
+        elif 15 <= antall <= 30:
+            return "d) 15-30 (\"daglig\")"
+        else:
+            return "e) 30+ (\"flere ganger om dagen\")"
