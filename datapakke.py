@@ -209,7 +209,7 @@ class DeployDataPakke:
         fig.update_xaxes(type='category')
         return fig
 
-    def hyppighet_buckets(antall):
+    def hyppighet_buckets(self, antall):
         if 1 <= antall <= 2:
             return "a) 1-2 (\"månedlig\")"
         elif 3 <= antall <= 6:
