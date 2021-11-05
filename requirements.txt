@@ -7,7 +7,6 @@ google-cloud-bigquery==2.10.0
 plotly==4.14.3
 dataverk==0.3.24
 gcsfs==0.7.2
-fiaas-logging==^0.1.1
 
 
 pytz~=2021.3
