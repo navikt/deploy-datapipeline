@@ -7,6 +7,8 @@ on:
   push:
     branches:
       - "main"
+    paths:
+      - "dataproduct/**"
 
 env:
   "IMAGE": docker.pkg.github.com/${{ github.repository }}/deploy-dataloader:${{ github.sha }}

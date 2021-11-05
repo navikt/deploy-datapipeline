@@ -3,6 +3,9 @@ on:
   push:
     branches:
       - "main"
+    paths-ignore:
+      - "dataproduct/**"
+
 
 env:
   "IMAGE": docker.pkg.github.com/${{ github.repository }}/deploy-datapipeline:${{ github.sha }}
