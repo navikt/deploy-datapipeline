@@ -1,4 +1,4 @@
-name: "Build and deploy deploy-datapipeline"
+name: "Build and deploy deploy data product"
 
 defaults:
   run:
@@ -26,9 +26,6 @@ jobs:
           python -m pip install --upgrade pip
           pip install pytest
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-      - name: Test with pytest
-        run: |
-          pytest
       - name: Build and push docker image
         run: "docker build --pull --tag ${IMAGE} . && echo $GITHUB_TOKEN | docker login\
                 \ --username $GITHUB_REPOSITORY --password-stdin https://docker.pkg.github.com\
