@@ -1,0 +1,49 @@
+name: "Build and deploy deploy-datapipeline"
+
+defaults:
+  run:
+    working-directory: dataproduct
+on:
+  push:
+    branches:
+      - "main"
+
+env:
+  "IMAGE": docker.pkg.github.com/${{ github.repository }}/deploy-dataloader:${{ github.sha }}
+
+jobs:
+  build:
+    name: "build"
+    runs-on: "ubuntu-latest"
+    steps:
+      - uses: "actions/checkout@v2"
+      - name: Set up Python 3.9
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pytest
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+      - name: Test with pytest
+        run: |
+          pytest
+      - name: Build and push docker image
+        run: "docker build --pull --tag ${IMAGE} . && echo $GITHUB_TOKEN | docker login\
+                \ --username $GITHUB_REPOSITORY --password-stdin https://docker.pkg.github.com\
+                \ && docker push ${IMAGE}"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  deployToProd:
+    name: "Deploy to prod"
+    needs: build
+    runs-on: "ubuntu-latest"
+    steps:
+      - uses: "actions/checkout@v2"
+      - name: "Deploy to prod-gcp"
+        uses: "nais/deploy/actions/deploy@v1"
+        env:
+          "APIKEY": "${{ secrets.NAIS_DEPLOY_APIKEY }}"
+          "CLUSTER": "prod-gcp"
+          "RESOURCE": "dataproduct/nais.yaml"

@@ -1,0 +1,21 @@
+apiVersion: "nais.io/v1"
+kind: "Naisjob"
+metadata:
+  name: deploydata-loader
+  namespace: nais-analyse
+  labels:
+    team: nais-analyse
+spec:
+  image: {{image}}
+  schedule: "00 8 * * *"
+  liveness:
+    path: /isHealthy
+  readiness:
+    path: /isReady
+  gcp:
+    bigQueryDatasets:
+      - name: deployment-data
+        permission: READWRITE
+        description: "Data om deployments i nav"
+    buckets:
+      - name: deployments-vera
