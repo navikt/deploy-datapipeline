@@ -23,7 +23,7 @@ class DeployDataProduct():
         logger.info('Wait 60 seconds for Istio to get going...')
         time.sleep(60)
 
-        output_filename = datetime.date.today().strftime("%Y-%m-%d") + "-deploys-vera-since-2021.parquet"
+        output_filename = "/tmp/" + datetime.date.today().strftime("%Y-%m-%d") + "-deploys-vera-since-2021.parquet"
         csv_text = self.get_deploydata_from_vera()
         self.transform(csv_text, output_filename)
         uri = self.write_to_bucket(output_filename)
