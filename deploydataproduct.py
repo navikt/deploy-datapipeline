@@ -64,5 +64,3 @@ class DeployDataProduct():
 
         response = requests.put(DATA_CATALOG_API, json=metadata)
         logger.info(f'Putting metadata in data catalog: {response.status_code} - {response.content}')
-
-
