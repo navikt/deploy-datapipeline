@@ -5,7 +5,7 @@ pandas-gbq==0.16.0
 google-cloud-storage==1.40.0
 google-cloud-bigquery==2.32.0
 plotly==4.14.3
-dataverk==0.4.14
+dataverk==0.4.15
 gcsfs==0.7.2
 
 
