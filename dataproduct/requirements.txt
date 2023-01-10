@@ -2,7 +2,7 @@ Flask==1.1.2
 influxdb==5.3.1
 pandas==1.2.2
 pandas-gbq==0.14.1
-google-cloud-storage==2.7.0
+google-cloud-storage==1.44.0
 google-cloud-bigquery==3.4.1
 plotly==4.14.3
 dataverk==0.4.17
