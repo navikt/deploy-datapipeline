@@ -3,7 +3,7 @@ influxdb==5.3.1
 pandas==1.2.2
 pandas-gbq==0.14.1
 google-cloud-storage==1.44.0
-google-cloud-bigquery==3.4.1
+google-cloud-bigquery==2.34.4
 plotly==4.14.3
 dataverk==0.4.17
 gcsfs==0.7.2
