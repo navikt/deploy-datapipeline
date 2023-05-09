@@ -19,8 +19,8 @@ class DeployDataPakke:
 
     def publiser_datapakke(self, filename):
         os.environ["DATAVERK_API_ENDPOINT"] = "https://data.nav.no/api"
-        os.environ["DATAVERK_BUCKET_ENDPOINT"] = "https://dv-api-ekstern.prod-gcp.nais.io/storage"
-        os.environ["DATAVERK_ES_HOST"] = "https://dv-api-ekstern.prod-gcp.nais.io/index/write/dcat"
+        os.environ["DATAVERK_BUCKET_ENDPOINT"] = "https://datakatalog-ekstern.intern.nav.no/storage"
+        os.environ["DATAVERK_ES_HOST"] = "https://datakatalog-ekstern.intern.nav.no/index/write/dcat"
 
         dp = self.lag_datapakke(filename)
         dv = dataverk.Client()
