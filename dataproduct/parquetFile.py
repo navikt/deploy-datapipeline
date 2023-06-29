@@ -5,7 +5,7 @@ import os
 
 
 def create_dataframe(filename):
-    logging.info("initialize dataframe from data product...")
+    logging.info("initialize dataframe from data product....")
 
     df = pandas.read_parquet(filename)
     logging.info(f'{len(df)} rows loaded into dataframe')
