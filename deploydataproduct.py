@@ -47,6 +47,7 @@ class DeployDataProduct():
 
     def transform(self, csv_text, parquet_filename):
         df = pandas.read_csv(StringIO(csv_text))
+        logger.info("lengt of dataframe" + len(df))
         df['deployed_timestamp'] = pandas.to_datetime(df['deployed_timestamp'], format='%Y-%m-%d %H:%M:%S')
         df['replaced_timestamp'] = pandas.to_datetime(df['replaced_timestamp'], format='%Y-%m-%d %H:%M:%S')
         df.to_parquet(parquet_filename)
