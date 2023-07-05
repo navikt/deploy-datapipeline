@@ -32,7 +32,7 @@ class DeployDataProduct():
 
     def get_deploydata_from_vera(self):
         start = time.time()
-        days_since_cutoff = (datetime.datetime.now().date() - datetime.date(2021, 1, 1)).days
+        days_since_cutoff = (datetime.datetime.now().date() - datetime.date(2023, 1, 1)).days
         response = requests.get(f"https://vera.intern.nav.no/api/v1/deploylog?environment=p&csv=true&last={days_since_cutoff}d")
         logger.info("Get data from vera: Time: {} seconds, size {}".format(str(time.time() - start), str(len(response.content))))
         logger.info(response.status_code)
