@@ -15,8 +15,8 @@ class DeployDataPakke:
 
     BUCKET_NAME = "deployments-vera"
     ARCHIVED_DEPLOYS = "2021-04-01-deploys-vera.parquet"
-    ARCHIVED_DEPLOYS_2021 = "2022-01-01-deploys-vera.parquet"
-    ARCHIVED_DEPLOYS_2022 = "2023-01-01-deploys-vera.parquet"
+    ARCHIVED_DEPLOYS_2021 = "2022-01-01-deploys-vera-since-2021.parquet"
+    ARCHIVED_DEPLOYS_2022 = "2023-01-01-deploys-vera-since-2021.parquet"
     PROJECT = "nais-analyse-prod-2dcc"
 
     def publiser_datapakke(self, filename):
@@ -48,8 +48,8 @@ class DeployDataPakke:
 
         df = self.create_dataframe(filename)
         df = df.append(df_archive)
-        df.append(df_archive_2021)
-        df.append(df_archive_2022)
+        df = df.append(df_archive_2021)
+        df = df.append(df_archive_2022)
 
         self.add_fig(dp, self.weekly_deploys_pr_year(df), "Gjennomsnittlig antall deploys hver uke per år (alle applikasjoner)")
 
