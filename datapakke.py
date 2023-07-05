@@ -15,8 +15,8 @@ class DeployDataPakke:
 
     BUCKET_NAME = "deployments-vera"
     ARCHIVED_DEPLOYS = "2021-04-01-deploys-vera.parquet"
-    ARCHIVED_DEPLOYS_2021 = "2022-01-01-deploys-vera-since-2021.parquet"
-    ARCHIVED_DEPLOYS_2022 = "2023-01-01-deploys-vera-since-2021.parquet"
+    ARCHIVED_DEPLOYS_2021 = "/tmp/2022-01-01-deploys-vera-since-2021.parquet"
+    ARCHIVED_DEPLOYS_2022 = "/tmp/2023-01-01-deploys-vera-since-2021.parquet"
     PROJECT = "nais-analyse-prod-2dcc"
 
     def publiser_datapakke(self, filename):
