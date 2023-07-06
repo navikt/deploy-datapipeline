@@ -97,7 +97,7 @@ class DeployDataPakke:
 
     def create_dataframe(self, filename):
 
-        logging.info('initialize google storage client and access data product...')
+        logging.info('initialize google storage client and access data product..')
         client = storage.Client()
         bucket = client.get_bucket(self.BUCKET_NAME)
 
